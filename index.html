@@ -84,7 +84,10 @@ svg.links{position:absolute;left:0;top:0;pointer-events:none;overflow:visible}
 @media (max-width:700px){ .wrap{flex-direction:column} .panel{width:auto;border-left:0;border-top:1px solid var(--line)} .board{min-width:760px} }
 @media (prefers-reduced-motion:no-preference){ .card{transition:opacity .15s} }
 
-.who{font-size:12px;color:var(--muted);margin-left:auto}
+.who{font-size:12px;color:var(--muted)}
+.online{margin-left:auto;display:inline-flex;gap:4px;align-items:center;font-size:11.5px;color:var(--muted)}
+.online .dot{display:inline-block;width:8px;height:8px;border-radius:50%;background:#2e9e5b;margin-right:2px}
+.online .av{display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;border-radius:50%;background:var(--accent-soft);color:var(--accent);font-size:10.5px;font-weight:600;border:1px solid var(--line);cursor:default}
 button.small{font-size:12px;padding:4px 8px}
 .auth{position:fixed;inset:0;z-index:20;background:color-mix(in srgb,var(--bg) 85%,transparent);backdrop-filter:blur(3px);display:flex;align-items:center;justify-content:center;padding:16px}
 .authbox{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:22px 24px;max-width:420px;width:100%;display:flex;flex-direction:column;gap:10px;box-shadow:0 12px 40px rgba(0,0,0,.18)}
@@ -113,7 +116,7 @@ button.small{font-size:12px;padding:4px 8px}
   <label class="tog"><input id="hideDone" type="checkbox"> Hide done</label>
   <button id="add" class="primary" hidden>+ Card</button>
   <span class="status" id="status">Connecting…</span>
-  <span class="who" id="who"></span><button id="pwbtn" class="ghost small" hidden>Password</button><span id="pwbox" class="pw" hidden><input id="pwnew" type="password" placeholder="new password (8+)" autocomplete="new-password"><button id="pwsave" class="primary small">Save</button></span><button id="signout" class="ghost small" hidden>Sign out</button>
+  <span class="online" id="online" title="People who have the board open right now"></span><span class="who" id="who"></span><button id="pwbtn" class="ghost small" hidden>Password</button><span id="pwbox" class="pw" hidden><input id="pwnew" type="password" placeholder="new password (8+)" autocomplete="new-password"><button id="pwsave" class="primary small">Save</button></span><button id="signout" class="ghost small" hidden>Sign out</button>
 </header>
 <div class="legend">
   <span><b style="color:var(--p-d)">■</b> Decision</span><span><b style="color:var(--p-1)">■</b> Priority action</span><span><b style="color:var(--p-2)">■</b> Action</span><span><b style="color:var(--p-3)">■</b> P3</span>
@@ -315,13 +318,23 @@ async function removeCard(id){
   if(error)throw error;
   delete cards[id];render();
 }
+function renderOnline(){
+  const box=$("#online");box.innerHTML="";if(!channel)return;
+  const st=channel.presenceState();const emails=Object.keys(st).sort();
+  if(!emails.length)return;
+  box.append(el("span",{class:"dot"}),el("span",{},emails.length+" online"));
+  emails.forEach(e=>{const name=e.split("@")[0].replace(/[._-]+/g," ");const ini=name.split(" ").filter(Boolean).slice(0,2).map(w=>w[0].toUpperCase()).join("")||"?";box.append(el("span",{class:"av",title:e+(e===session.user.email?" (you)":"")},ini));});
+}
 function subscribe(){
   if(channel)return;
-  channel=sb.channel("cards-live").on("postgres_changes",{event:"*",schema:"public",table:"cards"},p=>{
+  const me=session.user.email;
+  const ch=sb.channel("cards-live",{config:{presence:{key:me}}});channel=ch;
+  ch.on("presence",{event:"sync"},renderOnline)
+   .on("postgres_changes",{event:"*",schema:"public",table:"cards"},p=>{
     if(p.eventType==="DELETE"){delete cards[p.old.id];if(sel===p.old.id){sel=null;$("#panel").hidden=true;}}
     else cards[p.new.id]=row2card(p.new);
     render();
-  }).subscribe(st=>{if(st==="SUBSCRIBED")$("#status").innerHTML="Live · <b>shared</b>";else if(st==="CHANNEL_ERROR"||st==="TIMED_OUT")$("#status").textContent="Live updates lost – reload the page";});
+  }).subscribe(async st=>{if(st==="SUBSCRIBED"){$("#status").innerHTML="Live · <b>shared</b>";await ch.track({at:new Date().toISOString()});}else if(st==="CHANNEL_ERROR"||st==="TIMED_OUT")$("#status").textContent="Live updates lost – reload the page";});
 }
 
 // ---------- auth -------------------------------------------------------------------
