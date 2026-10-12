@@ -57,7 +57,12 @@ button,select,input,textarea{font:inherit;color:inherit}
 .card.pD{border-left-color:var(--p-d)} .card.pP1{border-left-color:var(--p-1)} .card.pP2{border-left-color:var(--p-2)} .card.pP3{border-left-color:var(--p-3)}
 .pill{display:inline-block;font-size:10px;font-weight:700;padding:1px 6px;border-radius:10px;margin-right:4px;letter-spacing:.02em;text-transform:uppercase}
 .pD .pill{background:var(--p-d-bg);color:var(--p-d)} .pP1 .pill{background:var(--p-1-bg);color:var(--p-1)} .pP2 .pill{background:var(--p-2-bg);color:var(--p-2)} .pP3 .pill{background:var(--p-3-bg);color:var(--p-3)}
-.card .st{position:absolute;right:6px;top:6px;font-size:10px;color:var(--muted)}
+.card .st{display:inline-block;margin-left:6px;font-size:10px;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:.02em}
+.card .pill.epic{background:var(--accent-soft);color:var(--accent);margin-left:4px}
+.epics{grid-column:2 / -1;display:flex;gap:6px;flex-wrap:wrap;align-items:center;font-size:11.5px;color:var(--muted);padding:2px 4px}
+.epics .ep{display:inline-flex;gap:6px;align-items:center;border:1px solid var(--line);border-radius:14px;padding:2px 9px;background:var(--panel);cursor:pointer}.epics .ep b{font-family:"IBM Plex Mono",monospace;font-weight:600;color:var(--accent)}
+.epics .ep .bar{display:inline-block;width:46px;height:6px;border-radius:3px;background:var(--line);overflow:hidden}.epics .ep .bar i{display:block;height:100%;background:#1f7a4d}
+.card .st.blocked{color:#b4412f}.card .st.dropped{text-decoration:line-through}
 .card .st.done{color:#1f7a4d;font-weight:700}
 svg.links{position:absolute;left:0;top:0;pointer-events:none;overflow:visible}
 .panel{width:340px;max-width:100%;border-left:1px solid var(--line);background:var(--panel);padding:14px 16px;overflow:auto;display:flex;flex-direction:column;gap:10px}
@@ -95,6 +100,37 @@ button.small{font-size:12px;padding:4px 8px}
 .authbox label{display:flex;flex-direction:column;gap:4px;font-size:12px;color:var(--muted)}
 .authbox input{font:inherit;padding:8px 10px;border:1px solid var(--line);border-radius:6px;background:var(--bg);color:var(--fg)}
 .authbox .msg{min-height:1.4em;color:var(--fg)}
+.modal{position:fixed;inset:0;z-index:30;background:color-mix(in srgb,var(--bg) 80%,transparent);display:flex;align-items:flex-start;justify-content:center;padding:24px 16px;overflow:auto}
+.mbox{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:18px 20px;max-width:1100px;width:100%;display:flex;flex-direction:column;gap:12px;box-shadow:0 12px 40px rgba(0,0,0,.18)}
+.mbox h2{margin:0;font-size:17px}.mbox .sum{font-size:13px;color:var(--muted)}.mbox .sum b{color:var(--fg)}
+.difft{width:100%;border-collapse:collapse;font-size:12px}.difft th{text-align:left;font-weight:600;color:var(--muted);border-bottom:1px solid var(--line);padding:6px 6px}.difft td{border-bottom:1px solid var(--line);padding:6px 6px;vertical-align:top}
+.difft .k{font-family:"IBM Plex Mono",monospace;font-size:11.5px;white-space:nowrap}.difft .old{color:var(--muted);text-decoration:line-through;margin-right:6px}.difft .new{color:var(--fg)}.difft .f{color:var(--accent);font-weight:600;margin-right:4px}
+.tag{display:inline-block;font-size:10.5px;font-weight:700;padding:1px 6px;border-radius:9px;text-transform:uppercase;letter-spacing:.02em}.tag.new{background:#dcefe3;color:#1f7a4d}.tag.chg{background:var(--accent-soft);color:var(--accent)}.tag.gone{background:#f6e3e0;color:#b4412f}
+.extra{padding:14px 16px;display:flex;flex-direction:column;gap:14px}
+.hc.wipover{background:#b4412f;color:#fff}
+.hc small{display:block;font-weight:500;font-size:11px;opacity:.8}
+.wipbar{display:flex;gap:10px;flex-wrap:wrap;font-size:12px;color:var(--muted);align-items:center}
+.wipbar b{font-weight:600;color:var(--fg)}.wipbar .over{color:#b4412f;font-weight:700}
+.laychips{display:flex;gap:6px;flex-wrap:wrap}.laychips .chip[aria-pressed="true"]{color:#fff}
+.bl{width:100%;border-collapse:collapse;font-size:12.5px;background:var(--panel);border:1px solid var(--line);border-radius:8px;overflow:hidden}
+.bl th{text-align:left;font-weight:600;color:var(--muted);font-size:11px;text-transform:uppercase;letter-spacing:.03em;padding:8px 8px;border-bottom:1px solid var(--line);background:var(--cell)}
+.bl td{padding:7px 8px;border-bottom:1px solid var(--line);vertical-align:middle}
+.bl tr.unranked td{color:var(--muted)}.bl tr:hover td{background:var(--cell)}
+.bl .rank{font-family:"IBM Plex Mono",monospace;font-weight:600;width:28px;color:var(--accent)}
+.bl .t{font-weight:600;cursor:pointer}.bl .t:hover{text-decoration:underline}
+.bl .num{font-family:"IBM Plex Mono",monospace;font-variant-numeric:tabular-nums;text-align:right}
+.bl select{font:inherit;font-size:12px;padding:2px 4px;border:1px solid var(--line);border-radius:5px;background:var(--bg);color:var(--fg)}
+.bl .vote{display:inline-flex;gap:3px;align-items:center}.bl .vote span{font-size:10px;color:var(--muted);margin-left:4px}
+.badge{display:inline-block;font-size:10px;font-weight:700;padding:1px 6px;border-radius:9px;margin-left:4px;vertical-align:middle}
+.badge.ready{background:#dcefe3;color:#1f7a4d}.badge.wait{background:var(--p-3-bg);color:var(--p-3)}.badge.split{background:#f6e3e0;color:#b4412f}.badge.spread{background:#fff1d6;color:#9a5b00}.badge.blocked{background:#f6e3e0;color:#b4412f}.badge.wip{background:var(--accent-soft);color:var(--accent)}
+.rv{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:12px}
+.rvbox{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:10px 12px;display:flex;flex-direction:column;gap:6px;border-top:4px solid var(--line)}
+.rvbox h3{margin:0;font-size:13.5px}.rvbox h4{margin:6px 0 0;font-size:11px;text-transform:uppercase;letter-spacing:.03em;color:var(--muted)}
+.rvbox ul{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:3px;font-size:12px}
+.rvbox li .id{font-family:"IBM Plex Mono",monospace;font-size:11px;color:var(--muted);margin-right:4px}.rvbox li .n{color:var(--muted)}
+.rvbox .none{color:var(--muted);font-size:12px;font-style:italic}
+.mbox textarea{font:inherit;font-size:12px;width:100%;min-height:40px;border:1px solid var(--line);border-radius:6px;background:var(--bg);color:var(--fg);padding:6px}
+.mbox .own{font-size:12px;color:var(--muted);line-height:1.5;border-left:3px solid var(--line);padding-left:10px}
 .authbox .alt{font-size:12px}.authbox .alt a{color:var(--accent)}
 .pw{display:inline-flex;gap:6px;align-items:center}.pw input{font:inherit;font-size:12px;padding:4px 6px;border:1px solid var(--line);border-radius:6px;background:var(--bg);color:var(--fg);width:150px}
 </style>
@@ -107,6 +143,9 @@ button.small{font-size:12px;padding:4px 8px}
   <div class="seg" role="group" aria-label="View">
     <button id="vMap" aria-pressed="true">Map</button>
     <button id="vSeq" aria-pressed="false">Sequence</button>
+    <button id="vKanban" aria-pressed="false">Kanban</button>
+    <button id="vBacklog" aria-pressed="false">Backlog</button>
+    <button id="vReview" aria-pressed="false">Review</button>
     <button id="vPeople" aria-pressed="false">People</button>
   </div>
   <div id="coChips"></div>
@@ -115,12 +154,15 @@ button.small{font-size:12px;padding:4px 8px}
   <label class="tog"><input id="arrows" type="checkbox"> Dependencies</label>
   <label class="tog"><input id="hideDone" type="checkbox"> Hide done</label>
   <button id="add" class="primary" hidden>+ Card</button>
+  <button id="syncBtn" class="ghost small" hidden title="Read the SharePoint tracker (.xlsx or .csv) and show what would change">Sync from tracker</button><input id="syncFile" type="file" accept=".xlsx,.xlsm,.xls,.csv" hidden>
+  <button id="exportBtn" class="ghost small" hidden title="Download the board as an Excel file in the tracker layout">Export .xlsx</button>
+  <button id="votersBtn" class="ghost small" hidden title="Who votes per layer, WIP limit">Voters</button>
   <span class="status" id="status">Connecting…</span>
   <span class="online" id="online" title="People who have the board open right now"></span><span class="who" id="who"></span><button id="pwbtn" class="ghost small" hidden>Password</button><span id="pwbox" class="pw" hidden><input id="pwnew" type="password" placeholder="new password (8+)" autocomplete="new-password"><button id="pwsave" class="primary small">Save</button></span><button id="signout" class="ghost small" hidden>Sign out</button>
 </header>
 <div class="legend">
   <span><b style="color:var(--p-d)">■</b> Decision</span><span><b style="color:var(--p-1)">■</b> Priority action</span><span><b style="color:var(--p-2)">■</b> Action</span><span><b style="color:var(--p-3)">■</b> P3</span>
-  <span id="lgArrows"><span class="lk"></span>arrow = the card at the arrowhead must wait for the card at the tail · <b>after #…</b> on a card lists what it waits for</span><span id="lgFocus" hidden><span class="lk w"></span>what the selected card waits for &nbsp;<span class="lk"></span>what it unlocks</span><span>Drag a card to another cell to change its layer or company; click it to edit.</span>
+  <span id="lgArrows"><span class="lk"></span>arrow = the card at the arrowhead must wait for the card at the tail · <b>after #…</b> on a card lists what it waits for</span><span id="lgFocus" hidden><span class="lk w"></span>what the selected card waits for &nbsp;<span class="lk"></span>what it unlocks</span><span>Drag a card to another cell to change its layer or company; click it to edit. Epics show their children's progress here; the children themselves live in Kanban and Backlog.</span>
 </div>
 
 <div id="auth" class="auth" hidden>
@@ -135,12 +177,13 @@ button.small{font-size:12px;padding:4px 8px}
   </form>
 </div>
 <div class="wrap">
-  <div class="boardwrap" id="boardwrap"><div id="board" class="board"></div><svg class="links" id="links"></svg><div id="people" class="people" hidden></div></div>
+  <div class="boardwrap" id="boardwrap"><div id="board" class="board"></div><svg class="links" id="links"></svg><div id="people" class="people" hidden></div><div id="extra" class="extra" hidden></div></div>
   <aside class="panel" id="panel" hidden></aside>
 </div>
 
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <script src="config.js"></script>
 <script>
 
@@ -148,20 +191,26 @@ const LAYERS=["Governance & scope","Infrastructure & data platform","SDLC & tool
 const LCOL={"Governance & scope":"#6b4fa8","Infrastructure & data platform":"#b03a7a","SDLC & tools":"#1f5fa8","Bioinformatics pipeline":"#0c8aa6","Validation & quality":"#1f7a4d","Viral expert & operations":"#c56a14"};
 const COS=["PTQ","PQE","CRL","Joint"];
 const PRIO={"D":"Decision","P1":"Priority action","P2":"Action","P3":"P3 action"};
-const STATUS=["open","in progress","done","blocked"];
+const STATUS=["open","in progress","done","blocked","dropped"];
 let cards={}; let db=null, userCap=null, canWrite=null, view="map", sel=null, filters={co:new Set(),pr:new Set(),q:""}, unsub=null;
 const $=s=>document.querySelector(s);
-const el=(t,a={},...ch)=>{const e=document.createElement(t);for(const[k,v]of Object.entries(a)){if(k==="class")e.className=v;else if(k.startsWith("on"))e.addEventListener(k.slice(2),v);else if(k==="html")e.innerHTML=v;else e.setAttribute(k,v);}for(const c of ch){if(c==null)continue;e.append(c.nodeType?c:document.createTextNode(c));}return e;};
+const el=(t,a={},...ch)=>{const e=document.createElement(t);for(const[k,v]of Object.entries(a)){if(k==="class")e.className=v;else if(k.startsWith("on"))e.addEventListener(k.slice(2),v);else if(k==="html")e.innerHTML=v;else if(k==="disabled"||k==="checked"||k==="hidden")e[k]=!!v;else e.setAttribute(k,v);}for(const c of ch){if(c==null)continue;e.append(c.nodeType?c:document.createTextNode(c));}return e;};
 
+// ---------- epics: a card with children is an epic (computed, no flag). A child's prerequisites are its own (the epic's prerequisites describe the epic, not each child).
+const children=id=>Object.values(cards).filter(c=>c.parent===id);
+const isEpic=c=>!!c&&children(c.id).length>0;
+const effDeps=c=>(c.deps||[]).filter(x=>cards[x]&&x!==c.id);
+function statusOf(c){if(!isEpic(c))return c.status;const ch=children(c.id);if(ch.every(x=>x.status==="done"||x.status==="dropped"))return "done";if(ch.some(x=>x.status==="in progress"||x.status==="done"))return "in progress";if(ch.some(x=>x.status==="blocked"))return "blocked";return "open";}
+const progress=c=>{const ch=children(c.id);return `${ch.filter(x=>x.status==="done").length}/${ch.length}`;};
 // ---------- waves (dependency depth)
-function waves(){const w={};const depth=(id,seen=new Set())=>{if(w[id]!=null)return w[id];const c=cards[id];if(!c||seen.has(id))return 0;seen.add(id);const ds=(c.deps||[]).filter(d=>cards[d]);w[id]=ds.length?1+Math.max(...ds.map(d=>depth(d,seen))):0;return w[id];};Object.keys(cards).forEach(id=>depth(id));return w;}
+function waves(){const w={};const depth=(id,seen=new Set())=>{if(w[id]!=null)return w[id];const c=cards[id];if(!c||seen.has(id))return 0;seen.add(id);const ds=effDeps(c);w[id]=ds.length?1+Math.max(...ds.map(d=>depth(d,seen))):0;return w[id];};Object.keys(cards).forEach(id=>depth(id));return w;}
 function unlocks(){const u={};Object.values(cards).forEach(c=>(c.deps||[]).forEach(d=>{u[d]=(u[d]||0)+1}));return u;}
 
 // ---------- filters
 function visible(c){
   if(filters.co.size&&!filters.co.has(c.company))return false;
   if(filters.pr.size&&!filters.pr.has(c.prio))return false;
-  if($("#hideDone").checked&&c.status==="done")return false;
+  if($("#hideDone").checked&&(c.status==="done"||c.status==="dropped"))return false;
   if(filters.q){const q=filters.q.toLowerCase();const hay=[c.id,c.title,c.owner,c.follower,c.note].join(" ").toLowerCase();if(!hay.includes(q))return false;}
   return true;
 }
@@ -173,9 +222,10 @@ function chips(){
 // ---------- card element
 function cardEl(c,extra){
   const d=el("div",{class:"card p"+c.prio+(sel===c.id?" sel":""),draggable:canWrite?"true":"false",tabindex:"0","data-id":c.id});
-  d.innerHTML=`<span class="pill">${PRIO[c.prio]||c.prio}</span><span class="id">#${c.id}</span>${c.due?` <span class="id">· ${c.due}</span>`:""}<span class="t"></span><span class="m"></span>${(c.deps||[]).filter(d=>cards[d]).length?`<span class="after">after <b>${(c.deps||[]).filter(d=>cards[d]).map(d=>"#"+d).join(", ")}</b></span>`:""}${c.status&&c.status!=="open"?`<span class="st ${c.status==="done"?"done":""}">${c.status}</span>`:""}`;
+  const st=statusOf(c), epic=isEpic(c);
+  d.innerHTML=`<span class="pill">${PRIO[c.prio]||c.prio}</span>${epic?`<span class="pill epic">epic ${progress(c)}</span>`:""}<span class="id">#${c.id}</span>${c.due?` <span class="id">· ${c.due}</span>`:""}${st&&st!=="open"&&view!=="kanban"?`<span class="st ${st==="done"?"done":st==="blocked"?"blocked":st==="dropped"?"dropped":""}">${st}</span>`:""}<span class="t"></span><span class="m"></span>${(c.deps||[]).filter(d=>cards[d]).length?`<span class="after">after <b>${(c.deps||[]).filter(d=>cards[d]).map(d=>"#"+d).join(", ")}</b></span>`:""}`;
   d.querySelector(".t").textContent=c.title;
-  d.querySelector(".m").textContent=[c.owner?"Owner: "+c.owner:"",c.follower&&c.follower!=="-"?"PQE: "+c.follower:"",extra||""].filter(Boolean).join(" · ");
+  d.querySelector(".m").textContent=[c.owner?"Owner: "+c.owner:"",c.follower&&c.follower!=="-"?"PQE: "+c.follower:"",c.parent?"part of #"+c.parent:"",extra||""].filter(Boolean).join(" · ");
   d.addEventListener("click",()=>{sel=c.id;openPanel(c.id);render();});
   d.addEventListener("keydown",e=>{if(e.key==="Enter"){sel=c.id;openPanel(c.id);render();}});
   d.addEventListener("dragstart",e=>{e.dataTransfer.setData("text/plain",c.id);});
@@ -191,10 +241,15 @@ function dropCell(cell,onDrop){
 // ---------- views
 function render(){
   chips();
-  const b=$("#board"), pp=$("#people"); b.innerHTML=""; pp.hidden=view!=="people"; b.hidden=view==="people"; $("#links").hidden=view==="people";
+  const b=$("#board"), pp=$("#people"), ex=$("#extra"); b.innerHTML="";
+  const tabular=view==="backlog"||view==="review";
+  pp.hidden=view!=="people"; ex.hidden=!tabular; b.hidden=view==="people"||tabular; $("#links").hidden=view!=="map"&&view!=="seq";
   const list=Object.values(cards);
-  if(!list.length){b.append(el("div",{class:"empty",html:"<b>No cards yet.</b><br>Cards appear here as soon as they are loaded from the workshop tracker. Use <b>+ Card</b> to add one by hand."}));return;}
+  if(!list.length){b.hidden=false;ex.hidden=true;b.append(el("div",{class:"empty",html:"<b>No cards yet.</b><br>Cards appear here as soon as they are loaded from the workshop tracker. Use <b>+ Card</b> to add one by hand."}));return;}
   if(view==="people")return renderPeople(list);
+  if(view==="kanban")return renderKanban(list);
+  if(view==="backlog")return renderBacklog(list);
+  if(view==="review")return renderReview(list);
   const W=waves(), U=unlocks();
   const cols=view==="map"?COS:[0,1,2,3].map(k=>`Wave ${k}`);
   const rows=view==="map"?LAYERS:COS;
@@ -205,7 +260,7 @@ function render(){
     b.append(el("div",{class:"hr",style:`background:${view==="map"?LCOL[r]:"#4a5568"}`},r));
     cols.forEach((c,ci)=>{
       const cell=el("div",{class:"cell"});
-      const items=list.filter(k=>visible(k)&&(view==="map"?(k.layer===r&&k.company===c):(k.company===r&&Math.min(W[k.id]||0,3)===ci)));
+      const items=list.filter(k=>visible(k)&&!k.parent&&(view==="map"?(k.layer===r&&k.company===c):(k.company===r&&Math.min(W[k.id]||0,3)===ci)));
       items.sort((a,b)=>(U[b.id]||0)-(U[a.id]||0)||a.prio.localeCompare(b.prio));
       items.forEach(k=>cell.append(cardEl(k,view==="seq"&&U[k.id]?`unlocks ${U[k.id]}`:(view==="map"?`layer ${k.layer.split(" ")[0]}`:""))));
       dropCell(cell,async k=>{if(view==="map"){if(k.layer===r&&k.company===c)return;await save(k.id,{layer:r,company:c});}else{if(k.company===r)return;await save(k.id,{company:r});}});
@@ -274,12 +329,18 @@ function openPanel(id){
   p.append(field("title","Title"));
   p.append(el("div",{class:"row"},field("layer","Layer","select",LAYERS.map(l=>[l,l])),field("company","Company","select",COS.map(x=>[x,x]))));
   p.append(el("div",{class:"row"},field("owner","Owner"),field("follower","PQE follower")));
-  p.append(el("div",{class:"row"},field("prio","Priority","select",Object.entries(PRIO)),field("status","Status","select",STATUS.map(x=>[x,x])),field("due","Due date")));
+  p.append(el("div",{class:"row"},field("prio","Priority","select",Object.entries(PRIO)),field("status","Status","select",STATUS.map(x=>[x,x])),field("due","Due date"),field("size","Size","select",[["","–"],...Object.keys(SIZE).map(k=>[k,k])])));
   p.append(field("note","Note / decision","textarea"));
   const depsBox=el("div",{class:"deps"});const depSet=new Set(c.deps||[]);
   Object.values(cards).filter(o=>o.id!==c.id).sort((a,b)=>a.id.localeCompare(b.id,undefined,{numeric:true})).forEach(o=>depsBox.append(el("button",{type:"button",title:o.title,"aria-pressed":String(depSet.has(o.id)),disabled:!canWrite,onclick:e=>{depSet.has(o.id)?depSet.delete(o.id):depSet.add(o.id);e.currentTarget.setAttribute("aria-pressed",String(depSet.has(o.id)));}},"#"+o.id)));
   p.append(el("label",{},"Depends on (click to toggle)",depsBox));
-  const U=unlocks();p.append(el("div",{class:"m",style:"font-size:12px;color:var(--muted)"},`Unlocks ${U[c.id]||0} card(s) · source: ${c.source||"-"}`));
+  if(c.parent&&cards[c.parent])p.append(el("div",{class:"m",style:"font-size:12px"},"Part of epic ",el("a",{href:"#",onclick:e=>{e.preventDefault();sel=c.parent;openPanel(c.parent);render();}},"#"+c.parent+" "+cards[c.parent].title)));
+  if(isEpic(c)){const ul=el("ul",{style:"margin:0;padding-left:16px;font-size:12px;display:flex;flex-direction:column;gap:2px"});children(c.id).sort((a,b)=>a.id.localeCompare(b.id,undefined,{numeric:true})).forEach(k=>ul.append(el("li",{},el("a",{href:"#",onclick:e=>{e.preventDefault();sel=k.id;openPanel(k.id);render();}},"#"+k.id),` ${k.title} `,el("span",{style:"color:var(--muted)"},`· ${k.size||"–"} · ${k.status}`))));p.append(el("div",{},el("div",{style:"font-size:12px;color:var(--muted)"},`Epic — ${progress(c)} children done (status computed from them)`),ul));}
+  if(canWrite&&!c.parent){const ta=el("textarea",{placeholder:"Split into children: one line per child, e.g.\nList the 10 trickiest historical cases\nDefine automatable acceptance criteria",style:"display:none;font:inherit;font-size:12px;min-height:70px;border:1px solid var(--line);border-radius:6px;background:var(--bg);color:var(--fg);padding:6px"});
+    const sb2=el("button",{class:"ghost small",onclick:async e=>{if(ta.style.display==="none"){ta.style.display="block";ta.focus();e.currentTarget.textContent="Create children";return;}const lines=ta.value.split("\n").map(x=>x.trim()).filter(Boolean);if(!lines.length)return;e.currentTarget.disabled=true;try{await splitCard(c.id,lines);ta.value="";ta.style.display="none";e.currentTarget.textContent=isEpic(c)?"Add children…":"Split into…";}catch(err){$("#status").textContent="Could not split: "+(err.message||err);}e.currentTarget.disabled=false;}},isEpic(c)?"Add children…":"Split into…");
+    p.append(el("div",{class:"row"},sb2),ta);}
+  if(c.details){const dd=el("details",{style:"font-size:12px;color:var(--muted)"});dd.append(el("summary",{style:"cursor:pointer"},"Tracker details (from the SharePoint file, read-only)"),el("div",{style:"white-space:pre-wrap;margin-top:4px;color:var(--fg)"},c.details));p.append(dd);}
+  const U=unlocks();p.append(el("div",{class:"m",style:"font-size:12px;color:var(--muted)"},`Unlocks ${U[c.id]||0} card(s) · source: ${c.source||"-"}${c.syncedAt?" · synced "+c.syncedAt.slice(0,10):""}`));
   if(canWrite){
     const msg=el("span",{style:"font-size:12px;color:var(--muted)"});
     p.append(el("div",{class:"row"},
@@ -290,13 +351,18 @@ function openPanel(id){
 }
 
 // ---------- data layer (Supabase) -------------------------------------------------
-const FIELDS=["title","layer","company","owner","follower","prio","status","due","note","deps","source"];
+const FIELDS=["title","layer","company","owner","follower","prio","status","due","note","deps","source","details","category","synced_at","size","parent"];
+const SIZE={XS:1,S:2,M:3,L:5,XL:8};const FIB=[1,2,3,5,8];
+let votes={}, settings={voters:{},wip:3};
 let sb=null, session=null, channel=null;
-function row2card(r){return {id:r.id,title:r.title,layer:r.layer,company:r.company,owner:r.owner||"",follower:r.follower||"",prio:r.prio,status:r.status||"open",due:r.due||"",note:r.note||"",deps:r.deps||[],source:r.source||"",updatedAt:r.updated_at,updatedBy:r.updated_by};}
+function row2card(r){return {id:r.id,title:r.title,layer:r.layer,company:r.company,owner:r.owner||"",follower:r.follower||"",prio:r.prio,status:r.status||"open",due:r.due||"",note:r.note||"",deps:r.deps||[],source:r.source||"",details:r.details||"",category:r.category||"",syncedAt:r.synced_at||"",size:r.size||"",parent:r.parent||"",updatedAt:r.updated_at,updatedBy:r.updated_by};}
 async function loadAll(){
   const {data,error}=await sb.from("cards").select("*");
   if(error)throw error;
-  const next={};data.forEach(r=>next[r.id]=row2card(r));cards=next;render();
+  const next={};data.forEach(r=>next[r.id]=row2card(r));cards=next;
+  const v=await sb.from("votes").select("*");if(!v.error){votes={};v.data.forEach(r=>votes[r.card_id+"|"+r.email.toLowerCase()]=r);}
+  const st=await sb.from("board_settings").select("*");if(!st.error){st.data.forEach(r=>{if(r.key==="voters")settings.voters=r.value||{};if(r.key==="wip")settings.wip=Number(r.value)||3;});}
+  render();
   if(sel&&!cards[sel]){sel=null;$("#panel").hidden=true;}
 }
 async function save(id,patch){
@@ -312,6 +378,12 @@ async function addCard(){
   const {error}=await sb.from("cards").insert(row);
   if(error){$("#status").textContent="Could not add: "+error.message;return;}
   cards[id]=row2card(row);render();sel=id;openPanel(id);
+}
+async function splitCard(parentId,titles){
+  const pc=cards[parentId];let n=children(parentId).length;
+  const rows=titles.map(t=>{n++;let id=`${parentId}.${n}`;while(cards[id]){n++;id=`${parentId}.${n}`;}return {id,title:t,layer:pc.layer,company:pc.company,owner:pc.owner,follower:pc.follower,prio:pc.prio==="D"?"P2":pc.prio,status:"open",due:"",deps:[],note:"",source:"split of #"+parentId,parent:parentId,size:""};});
+  const {error}=await sb.from("cards").insert(rows);if(error)throw error;
+  rows.forEach(r=>cards[r.id]=row2card(r));render();openPanel(parentId);
 }
 async function removeCard(id){
   const {error}=await sb.from("cards").delete().eq("id",id);
@@ -334,6 +406,13 @@ function subscribe(){
     if(p.eventType==="DELETE"){delete cards[p.old.id];if(sel===p.old.id){sel=null;$("#panel").hidden=true;}}
     else cards[p.new.id]=row2card(p.new);
     render();
+  })
+   .on("postgres_changes",{event:"*",schema:"public",table:"votes"},p=>{
+    if(p.eventType==="DELETE"){delete votes[p.old.card_id+"|"+(p.old.email||"").toLowerCase()];}else votes[p.new.card_id+"|"+p.new.email.toLowerCase()]=p.new;
+    if(view==="backlog"||view==="review")render();
+  })
+   .on("postgres_changes",{event:"*",schema:"public",table:"board_settings"},p=>{
+    const r=p.new||{};if(r.key==="voters")settings.voters=r.value||{};if(r.key==="wip")settings.wip=Number(r.value)||3;render();
   }).subscribe(async st=>{if(st==="SUBSCRIBED"){$("#status").innerHTML="Live · <b>shared</b>";await ch.track({at:new Date().toISOString()});}else if(st==="CHANNEL_ERROR"||st==="TIMED_OUT")$("#status").textContent="Live updates lost – reload the page";});
 }
 
@@ -349,7 +428,7 @@ async function afterSignIn(){
     showAuth(`${email} is signed in but is not on the editors list. Ask the board owner to add it, then reload.`);
     return;
   }
-  canWrite=true;$("#add").hidden=false;$("#who").textContent=email;$("#signout").hidden=false;$("#pwbtn").hidden=false;
+  canWrite=true;$("#add").hidden=false;$("#syncBtn").hidden=false;$("#exportBtn").hidden=false;$("#votersBtn").hidden=false;$("#who").textContent=email;$("#signout").hidden=false;$("#pwbtn").hidden=false;
   try{await loadAll();subscribe();}catch(e){$("#status").textContent="Could not load cards: "+(e.message||"error");}
 }
 async function boot(){
@@ -377,8 +456,266 @@ async function boot(){
   if(data.session){session=data.session;afterSignIn();}else{$("#status").textContent="Not signed in";showAuth("");}
 }
 
+// ---------- flow helpers (kanban / backlog / review) -----------------------------------------
+const isDone=c=>{if(!c)return false;const st=statusOf(c);return st==="done"||st==="dropped";};
+const isReady=c=>statusOf(c)==="open"&&effDeps(c).every(d=>isDone(cards[d]));
+const KCOLS=["Waiting","Ready","In progress","Blocked","Done"];
+function kcol(c){const st=statusOf(c);if(st==="done")return "Done";if(st==="blocked")return "Blocked";if(st==="in progress")return "In progress";return isReady(c)?"Ready":"Waiting";}
+function wipByCompany(list){const w={};COS.forEach(x=>w[x]=0);list.forEach(c=>{if(c.status==="in progress"&&!isEpic(c))w[c.company]=(w[c.company]||0)+1;});return w;}
+function wipBar(list){const w=wipByCompany(list);const bar=el("div",{class:"wipbar"},el("span",{},"In progress per company (limit "+settings.wip+"): "));COS.forEach(x=>bar.append(el("span",{class:w[x]>settings.wip?"over":""},el("b",{},x+" "),`${w[x]}/${settings.wip}`)));return bar;}
+const myEmail=()=>(session&&session.user.email||"").toLowerCase();
+function counted(layer){const l=(settings.voters&&settings.voters[layer])||[];return l.map(x=>x.toLowerCase().trim()).filter(Boolean);}
+const median=a=>{if(!a.length)return 0;const s=[...a].sort((x,y)=>x-y);const m=Math.floor(s.length/2);return s.length%2?s[m]:(s[m-1]+s[m])/2;};
+function score(c){
+  const who=counted(c.layer);
+  const vs=Object.values(votes).filter(v=>v.card_id===c.id&&(!who.length||who.includes(v.email.toLowerCase())));
+  const comp=k=>vs.map(v=>Number(v[k])||0).filter(x=>x>0);
+  const V=comp("value"),U=comp("urgency"),R=comp("risk");
+  const n=Math.min(V.length,U.length,R.length);
+  const med={v:median(V),u:median(U),r:median(R)};
+  const spread=Math.max(...[V,U,R].map(a=>a.length?Math.max(...a)-Math.min(...a):0));
+  const sz=SIZE[c.size]||0;
+  let reason="";
+  if(c.prio==="D")reason="decision";else if(isEpic(c))reason="epic";else if(!sz)reason="size?";else if(c.size==="XL")reason="split";else if(n<3)reason=`${n}/3 votes`;
+  const wsjf=sz&&n>=3?(med.v+med.u+med.r)/sz:0;
+  return {n,med,spread,wsjf,reason,size:sz,all:vs.length};
+}
+function renderKanban(list){
+  const b=$("#board");const W=waves();
+  b.style.gridTemplateColumns=`170px repeat(${KCOLS.length},minmax(190px,1fr))`;b.style.columnGap="10px";
+  const wip=wipByCompany(list);const over=COS.filter(x=>wip[x]>settings.wip);
+  b.append(el("div",{class:"corner"}));
+  KCOLS.forEach(k=>{const h=el("div",{class:"hc"+(k==="In progress"&&over.length?" wipover":"")},k);if(k==="In progress")h.append(el("small",{},over.length?"over limit: "+over.join(", "):`limit ${settings.wip} per company`));if(k==="Ready")h.append(el("small",{},"all prerequisites done"));if(k==="Waiting")h.append(el("small",{},"a prerequisite is not done"));b.append(h);});
+  LAYERS.forEach(r=>{
+    b.append(el("div",{class:"hr",style:`background:${LCOL[r]}`},r));
+    const eps=list.filter(c=>visible(c)&&c.layer===r&&isEpic(c)&&c.status!=="dropped");
+    if(eps.length){b.lastChild.style.gridRow="span 2";const strip=el("div",{class:"epics"},el("span",{},"Epics:"));eps.forEach(e=>{const ch=children(e.id),dn=ch.filter(x=>x.status==="done").length;strip.append(el("span",{class:"ep",title:e.title+" — click to open",onclick:()=>{sel=e.id;openPanel(e.id);}},el("b",{},"#"+e.id),e.title.length>42?e.title.slice(0,40)+"…":e.title,el("span",{class:"bar"},el("i",{style:`width:${ch.length?Math.round(100*dn/ch.length):0}%`})),`${dn}/${ch.length}`));});b.append(strip);}
+    KCOLS.forEach(k=>{
+      const cell=el("div",{class:"cell"});
+      const items=list.filter(c=>visible(c)&&c.layer===r&&!isEpic(c)&&c.status!=="dropped"&&kcol(c)===k);
+      items.sort((a,b)=>a.prio.localeCompare(b.prio)||(W[a.id]||0)-(W[b.id]||0));
+      items.forEach(c=>{const extra=k==="Waiting"?"after "+effDeps(c).filter(d=>!isDone(cards[d])).map(d=>"#"+d).join(", "):(k==="Done"&&c.prio==="D"?"taken":c.company);cell.append(cardEl(c,extra));});
+      dropCell(cell,async c=>{
+        const st=k==="In progress"?"in progress":k==="Blocked"?"blocked":k==="Done"?"done":"open";
+        if(c.status===st)return;
+        if(st==="in progress"&&wipByCompany(list)[c.company]>=settings.wip&&!confirmWip(c)){return;}
+        await save(c.id,{status:st});
+      });
+      b.append(cell);
+    });
+  });
+  $("#links").innerHTML="";
+}
+function confirmWip(c){$("#status").textContent=`${c.company} is at its WIP limit (${settings.wip}) — finish or park something first. Drop again to override.`;if(c._wipArmed){c._wipArmed=false;return true;}c._wipArmed=true;setTimeout(()=>c._wipArmed=false,6000);return false;}
+let blLayer=null;
+function renderBacklog(list){
+  const ex=$("#extra");ex.innerHTML="";
+  const present=LAYERS.filter(l=>list.some(c=>c.layer===l&&!isDone(c)&&c.prio!=="D"));
+  if(!blLayer||!present.includes(blLayer))blLayer=present[0]||LAYERS[0];
+  const chipsEl=el("div",{class:"laychips"});LAYERS.forEach(l=>chipsEl.append(el("button",{class:"chip","aria-pressed":String(l===blLayer),style:l===blLayer?`background:${LCOL[l]};border-color:${LCOL[l]}`:"",onclick:()=>{blLayer=l;render();}},l)));
+  ex.append(chipsEl);
+  const who=counted(blLayer);const me=myEmail();
+  ex.append(el("div",{class:"sum",style:"font-size:12px;color:var(--muted)"},
+    who.length?`Votes counted for this layer: ${who.join(", ")}${who.includes(me)?" (yours counts)":" — you can vote, it is shown but not counted"}`:"No voter list for this layer yet: every vote counts (set it under Voters).",
+    " · Score = (Value + Urgency + Risk) ÷ Size, medians of the counted votes · ranked once 3 votes are in · XL must be split first."));
+  const eps=list.filter(c=>c.layer===blLayer&&isEpic(c)&&!isDone(c));
+  if(eps.length)ex.append(el("div",{class:"epics",style:"padding:0"},el("span",{},"Epics in this layer (ranked through their children):"),...eps.map(e=>{const ch=children(e.id),dn=ch.filter(x=>x.status==="done").length;return el("span",{class:"ep",onclick:()=>{sel=e.id;openPanel(e.id);}},el("b",{},"#"+e.id),e.title.length>42?e.title.slice(0,40)+"…":e.title,`${dn}/${ch.length}`);})));
+  const rows=list.filter(c=>visible(c)&&c.layer===blLayer&&!isDone(c)&&c.prio!=="D"&&!isEpic(c)).map(c=>({c,s:score(c)}));
+  rows.sort((a,b)=>(b.s.wsjf-a.s.wsjf)||(a.s.reason?1:0)-(b.s.reason?1:0)||a.c.prio.localeCompare(b.c.prio));
+  const t=el("table",{class:"bl"});
+  t.append(el("tr",{},...["#","","Card","Owner","Size","My vote (V · U · R)","Team V·U·R","Votes","Spread","Score"].map(h=>el("th",{},h))));
+  let rank=0;
+  rows.forEach(({c,s})=>{
+    const tr=el("tr",{class:s.reason?"unranked":""});
+    const ranked=!s.reason;if(ranked)rank++;
+    const myv=votes[c.id+"|"+me]||{};
+    const sizeSel=el("select",{disabled:!canWrite,onchange:async e=>{await save(c.id,{size:e.target.value});}});[["","–"],...Object.keys(SIZE).map(k=>[k,k])].forEach(([v,l])=>sizeSel.append(el("option",{value:v},l)));sizeSel.value=c.size||"";
+    const vsel=k=>{const sl=el("select",{disabled:!canWrite,onchange:e=>castVote(c.id,k,Number(e.target.value))});[["","–"],...FIB.map(x=>[x,x])].forEach(([v,l])=>sl.append(el("option",{value:v},l)));sl.value=myv[k]||"";return sl;};
+    const state=kcol(c);
+    const badges=el("span",{});
+    if(state==="Ready")badges.append(el("span",{class:"badge ready"},"ready"));else if(state==="Waiting")badges.append(el("span",{class:"badge wait",title:"waits for "+effDeps(c).filter(d=>!isDone(cards[d])).map(d=>"#"+d).join(", ")},"waiting"));else if(state==="In progress")badges.append(el("span",{class:"badge wip"},"in progress"));else if(state==="Blocked")badges.append(el("span",{class:"badge blocked"},"blocked"));
+    if(c.size==="XL")badges.append(el("span",{class:"badge split"},"split"));
+    if(c.parent)badges.append(el("span",{class:"badge wip",style:"background:var(--cell);color:var(--muted)",title:cards[c.parent]?cards[c.parent].title:""},"↳ #"+c.parent));
+    if(s.spread>=4)badges.append(el("span",{class:"badge spread",title:"the counted votes disagree by "+s.spread+" on one component — discuss"},"disagree"));
+    tr.append(el("td",{class:"rank"},ranked?String(rank):""),
+      el("td",{},el("span",{class:"pill",style:`background:var(--p-${c.prio==="D"?"d":c.prio.slice(1)}-bg);color:var(--p-${c.prio==="D"?"d":c.prio.slice(1)})`},c.prio)),
+      el("td",{},el("span",{class:"t",onclick:()=>{sel=c.id;openPanel(c.id);}},"#"+c.id+" "+c.title),badges),
+      el("td",{},c.owner||"-"),el("td",{},sizeSel),
+      el("td",{},el("span",{class:"vote"},vsel("value"),vsel("urgency"),vsel("risk"))),
+      el("td",{class:"num"},s.n?`${s.med.v}·${s.med.u}·${s.med.r}`:"–"),el("td",{class:"num"},String(s.all)+(who.length&&s.all!==s.n?` (${s.n} counted)`:"")),el("td",{class:"num"},s.n?String(s.spread):"–"),
+      el("td",{class:"num"},ranked?s.wsjf.toFixed(1):el("span",{style:"color:var(--muted);font-family:inherit;font-size:11px"},s.reason)));
+    t.append(tr);
+  });
+  if(!rows.length)t.append(el("tr",{},el("td",{colspan:"10",style:"color:var(--muted)"},"No open cards in this layer.")));
+  ex.append(el("div",{style:"overflow:auto"},t));
+}
+async function castVote(cardId,k,val){
+  const me=myEmail();if(!me||!canWrite)return;
+  const cur=votes[cardId+"|"+me]||{card_id:cardId,email:me,value:0,urgency:0,risk:0};
+  const row={card_id:cardId,email:me,value:cur.value||0,urgency:cur.urgency||0,risk:cur.risk||0};row[k]=val||0;
+  const {error}=await sb.from("votes").upsert(row,{onConflict:"card_id,email"});
+  if(error){$("#status").textContent="Vote not saved: "+error.message;return;}
+  votes[cardId+"|"+me]=row;render();
+}
+function renderReview(list){
+  const ex=$("#extra");ex.innerHTML="";const today=new Date().toISOString().slice(0,10);
+  ex.append(el("h2",{style:"margin:0;font-size:16px"},"Weekly review — "+today),wipBar(list));
+  const grid=el("div",{class:"rv"});
+  const li=(c,n)=>el("li",{},el("span",{class:"id",onclick:()=>{sel=c.id;openPanel(c.id);},style:"cursor:pointer"},"#"+c.id),c.title,n?el("span",{class:"n"}," · "+n):"");
+  const sec=(box,title,items,fmt)=>{box.append(el("h4",{},title));if(!items.length){box.append(el("div",{class:"none"},"none"));return;}const ul=el("ul");items.forEach(x=>ul.append(fmt(x)));box.append(ul);};
+  LAYERS.forEach(l=>{
+    const L=list.filter(c=>c.layer===l&&c.status!=="dropped");if(!L.length)return;
+    const box=el("div",{class:"rvbox",style:`border-top-color:${LCOL[l]}`});box.append(el("h3",{},l));
+    const epsL=L.filter(isEpic);
+    sec(box,"Epics",epsL,c=>li(c,`${progress(c)} done · ${statusOf(c)}`));
+    const ranked=L.filter(c=>!isDone(c)&&c.prio!=="D"&&!isEpic(c)).map(c=>({c,s:score(c)})).filter(x=>!x.s.reason).sort((a,b)=>b.s.wsjf-a.s.wsjf);
+    sec(box,"Next up (ready, by score)",ranked.filter(x=>kcol(x.c)==="Ready").slice(0,3),x=>li(x.c,`score ${x.s.wsjf.toFixed(1)} · ${x.c.owner||"-"}`));
+    sec(box,"In progress",L.filter(c=>c.status==="in progress"&&!isEpic(c)),c=>li(c,c.owner));
+    sec(box,"Blocked",L.filter(c=>c.status==="blocked"),c=>li(c,c.note?c.note.slice(0,80):"no blocker named — add it in the note"));
+    sec(box,"Overdue",L.filter(c=>c.due&&c.due<today&&!isDone(c)),c=>li(c,`due ${c.due} · ${c.owner||"-"}`));
+    sec(box,"Open decisions",L.filter(c=>c.prio==="D"&&!isDone(c)),c=>li(c,c.owner));
+    const dis=L.filter(c=>!isDone(c)&&c.prio!=="D"&&!isEpic(c)).map(c=>({c,s:score(c)})).filter(x=>x.s.spread>=4);
+    sec(box,"Disagreement (spread ≥ 4)",dis,x=>li(x.c,`spread ${x.s.spread} · ${x.s.n} votes`));
+    const unsized=L.filter(c=>!isDone(c)&&c.prio!=="D"&&!isEpic(c)&&(!c.size||c.size==="XL"));
+    sec(box,"To size / split",unsized,c=>li(c,c.size==="XL"?"XL → split":"no size yet"));
+    grid.append(box);
+  });
+  ex.append(grid);
+}
+function showVoters(){
+  const m=el("div",{class:"modal"}),box=el("div",{class:"mbox",style:"max-width:720px"});m.append(box);
+  box.append(el("h2",{},"Who votes, per layer"),el("p",{class:"sum"},"E-mails separated by commas. Only these votes count in the layer's ranking (everyone can still vote and see). Leave a layer empty to count everyone. The layer owner (e.g. Doug for Infrastructure, Rémi for Bioinformatics) should be on the list, plus the people working the layer's cards."));
+  const tas={};LAYERS.forEach(l=>{const ta=el("textarea",{});ta.value=((settings.voters||{})[l]||[]).join(", ");tas[l]=ta;box.append(el("label",{style:"display:flex;flex-direction:column;gap:3px;font-size:12px;color:var(--muted)"},el("span",{style:`color:${LCOL[l]};font-weight:600`},l),ta));});
+  const wipIn=el("input",{type:"number",min:"1",max:"10",style:"width:70px;font:inherit;padding:4px;border:1px solid var(--line);border-radius:6px;background:var(--bg);color:var(--fg)"});wipIn.value=settings.wip;
+  box.append(el("label",{style:"display:flex;gap:8px;align-items:center;font-size:12px;color:var(--muted)"},"WIP limit per company (cards in progress at once)",wipIn));
+  const msg=el("span",{class:"sum"});
+  box.append(el("div",{class:"row"},el("button",{class:"primary",onclick:async()=>{
+    const v={};LAYERS.forEach(l=>{v[l]=tas[l].value.split(/[,;\s]+/).map(x=>x.trim().toLowerCase()).filter(x=>x.includes("@"));});
+    const {error}=await sb.from("board_settings").upsert([{key:"voters",value:v},{key:"wip",value:Number(wipIn.value)||3}],{onConflict:"key"});
+    if(error){msg.textContent="Could not save: "+error.message;return;}
+    settings.voters=v;settings.wip=Number(wipIn.value)||3;m.remove();render();}},"Save"),el("button",{class:"ghost",onclick:()=>m.remove()},"Cancel"),msg));
+  document.body.append(m);
+}
+
+// ---------- tracker sync (SharePoint Excel → board) and export (board → Excel) -------------
+// Field ownership: the tracker owns title, owner, follower, due, priority band, category, details.
+// The board owns layer, company, dependencies, status, board note. A row missing from the tracker marks the card "dropped".
+const TRACKER_OWNED=["title","owner","follower","due","prio","category","details"];
+const CAT2LAYER={"infrastructure":"Infrastructure & data platform","sdlc":"SDLC & tools","method":"Bioinformatics pipeline","validation":"Validation & quality","decision":"Governance & scope","governance":"Governance & scope","viral":"Viral expert & operations","operation":"Viral expert & operations"};
+const TYPE2PRIO=t=>{t=(t||"").toLowerCase();if(t.includes("decision"))return "D";if(t.includes("(1)")||t.includes("priority"))return "P1";if(t.includes("(3)")||t.includes("p3"))return "P3";return "P2";};
+const norm=v=>String(v==null?"":v).replace(/[\u201c\u201d\u201e]/g,'"').replace(/[\u2018\u2019]/g,"'").replace(/\u00a0/g," ").replace(/\s+/g," ").trim();
+function normDate(v){
+  if(v==null||v==="")return "";
+  if(v instanceof Date&&!isNaN(v)){const t=new Date(v.getTime()+12*3600*1000);return `${t.getFullYear()}-${String(t.getMonth()+1).padStart(2,"0")}-${String(t.getDate()).padStart(2,"0")}`;}
+  const s=norm(v);let m;
+  if((m=s.match(/^(\d{4})-(\d{2})-(\d{2})/)))return `${m[1]}-${m[2]}-${m[3]}`;
+  if((m=s.match(/^(\d{1,2})[-\/ ]([A-Za-z]{3})[a-z]*[-\/ ](\d{4})$/))){const mo={jan:1,feb:2,mar:3,apr:4,may:5,jun:6,jul:7,aug:8,sep:9,oct:10,nov:11,dec:12}[m[2].slice(0,3).toLowerCase()];if(mo)return `${m[3]}-${String(mo).padStart(2,"0")}-${m[1].padStart(2,"0")}`;}
+  if((m=s.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/)))return `${m[3]}-${m[2].padStart(2,"0")}-${m[1].padStart(2,"0")}`; // dd/mm/yyyy (EU)
+  if(typeof v==="number"&&v>30000&&v<80000){const d=new Date(Date.UTC(1899,11,30)+Math.round(v)*86400*1000);return d.toISOString().slice(0,10);}
+  return s;
+}
+function parseTracker(buf,name){
+  const u8=new Uint8Array(buf);let wb;
+  if(u8[0]===0x50&&u8[1]===0x4b){wb=XLSX.read(buf,{type:"array",cellDates:true});} // zip = real workbook
+  else{ // text (csv): decode as UTF-8, fall back to Windows-1252 for files saved by Excel on Windows
+    let txt;try{txt=new TextDecoder("utf-8",{fatal:true}).decode(u8);}catch(_){txt=new TextDecoder("windows-1252").decode(u8);}
+    wb=XLSX.read(txt,{type:"string",cellDates:true});}
+  let rows=null;
+  for(const sn of wb.SheetNames){const r=XLSX.utils.sheet_to_json(wb.Sheets[sn],{header:1,defval:"",blankrows:false,raw:true});const h=r.findIndex(x=>norm(x[0])==="#"&&x.some(c=>/action/i.test(norm(c))));if(h>=0){rows=r.slice(h);break;}}
+  if(!rows)throw new Error("No sheet with a header row starting with '#' and an 'Action' column was found in "+name);
+  const hdr=rows[0].map(c=>norm(c).toLowerCase());
+  const col=(...names)=>{for(const n of names){const i=hdr.findIndex(h=>h===n||h.startsWith(n));if(i>=0)return i;}return -1;};
+  const ci={id:0,cat:col("category"),type:col("type"),action:col("action"),details:col("details","description"),owner:col("owner"),due:col("target due","due"),fol:col("pqe follower","follower"),note:-1};
+  // an unnamed trailing column holds free notes in the DIST file
+  for(let i=hdr.length-1;i>ci.fol;i--){if(hdr[i]===""&&rows.some(r=>norm(r[i])))ci.note=i;}
+  const get=(r,k)=>ci[k]>=0?r[ci[k]]:"";
+  const recs=[];let last=null;
+  rows.slice(1).forEach(r=>{
+    if(!r.some(c=>norm(c)))return;
+    const id=norm(get(r,"id"));
+    if(!id){ // continuation row: fold its cells into the previous record
+      if(!last)return;
+      const o=norm(get(r,"owner")),d=norm(get(r,"details")),n=norm(get(r,"note")),f=norm(get(r,"fol"));
+      if(o)last.owner=last.owner?last.owner+" / "+o:o; if(f)last.follower=last.follower?last.follower+" / "+f:f;
+      if(d)last.details+=(last.details?"\n":"")+d; if(n)last.details+=(last.details?"\n":"")+n;
+      return;
+    }
+    const type=norm(get(r,"type"));
+    const rec={id,title:norm(get(r,"action")),category:norm(get(r,"cat")),prio:TYPE2PRIO(type),owner:norm(get(r,"owner")),follower:norm(get(r,"fol")),due:normDate(get(r,"due")),details:String(get(r,"details")||"").trim()};
+    const n=norm(get(r,"note"));if(n)rec.details+=(rec.details?"\n":"")+"Note: "+n;
+    recs.push(rec);last=rec;
+  });
+  // duplicate ids (e.g. #86 as decision and as action): the decision row gets the suffix D
+  const count={};recs.forEach(x=>count[x.id]=(count[x.id]||0)+1);
+  recs.forEach(x=>{if(count[x.id]>1&&x.prio==="D")x.id=x.id+"D";});
+  const seen=new Set();recs.forEach(x=>{let k=x.id,i=2;while(seen.has(k)){k=x.id+"-"+i++;}x.id=k;seen.add(k);});
+  return recs;
+}
+function diffTracker(recs,opts={}){
+  const owned=TRACKER_OWNED.filter(k=>!(k==="title"&&opts.keepTitles));
+  const now=new Date().toISOString();
+  const out={create:[],change:[],drop:[],same:0,ts:now};
+  const inFile=new Set(recs.map(r=>r.id));
+  recs.forEach(r=>{
+    const c=cards[r.id];
+    if(!c){const lay=Object.entries(CAT2LAYER).find(([k])=>r.category.toLowerCase().includes(k));out.create.push({id:r.id,row:Object.assign({},r,{layer:lay?lay[1]:LAYERS[0],company:"Joint",status:"open",deps:[],note:"",source:"tracker #"+r.id.replace(/D$/,"")+(r.prio==="D"?" decision":""),synced_at:now})});return;}
+    const ch=[];owned.forEach(k=>{const a=norm(c[k]),b=norm(r[k]);if(a!==b)ch.push({k,from:c[k]||"",to:r[k]||""});});
+    if(c.status==="dropped")ch.push({k:"status",from:"dropped",to:"open"});
+    if(ch.length)out.change.push({id:r.id,title:c.title,changes:ch,patch:Object.assign(Object.fromEntries(ch.map(x=>[x.k,x.to])),{synced_at:now})});else out.same++;
+  });
+  const managed=c=>!!c.syncedAt||/^tracker #[^\s\/]+( decision)?$/i.test(c.source||"");
+  Object.values(cards).forEach(c=>{if(managed(c)&&!inFile.has(c.id)&&c.status!=="dropped")out.drop.push({id:c.id,title:c.title});});
+  return out;
+}
+function showDiff(d,fname,recs,opts={}){
+  const m=el("div",{class:"modal",id:"diff"}),box=el("div",{class:"mbox"});m.append(box);
+  box.append(el("h2",{},"Sync from tracker — "+fname));
+  box.append(el("div",{class:"sum",html:`<b>${d.create.length}</b> new · <b>${d.change.length}</b> changed · <b>${d.drop.length}</b> missing from the file (will be marked <i>dropped</i>, not deleted) · <b>${d.same}</b> unchanged. Untick a line to leave that card as it is.`}));
+  const kt=el("input",{type:"checkbox",checked:!!opts.keepTitles,onchange:e=>{m.remove();showDiff(diffTracker(recs,{keepTitles:e.target.checked}),fname,recs,{keepTitles:e.target.checked});}});
+  box.append(el("div",{class:"own"},"The tracker owns: title, owner, PQE follower, due date, priority band, category, details. The board keeps: layer, company, dependencies, status, board note. ",el("label",{style:"display:inline-flex;gap:6px;align-items:center;margin-left:8px;cursor:pointer"},kt,"keep the board's titles (don't take titles from the tracker)")));
+  const t=el("table",{class:"difft"});t.append(el("tr",{},el("th",{},""),el("th",{},"Card"),el("th",{},"What"),el("th",{},"Change")));
+  const picks=[];
+  const row=(kind,id,title,html)=>{const cb=el("input",{type:"checkbox"});cb.checked=true;picks.push({kind,id,cb});const tr=el("tr",{});tr.append(el("td",{},cb),el("td",{class:"k"},"#"+id),el("td",{},el("span",{class:"tag "+kind},kind==="create"?"new":kind==="change"?"changed":"missing")),el("td",{html:html||esc(title)}));t.append(tr);};
+  d.create.forEach(x=>row("create",x.id,x.row.title,`<b>${esc(x.row.title)}</b> → lands in <i>${esc(x.row.layer)}</i> / Joint, owner ${esc(x.row.owner||"-")}, ${esc(PRIO[x.row.prio])}`));
+  d.change.forEach(x=>row("change",x.id,x.title,x.changes.map(c=>`<span class="f">${c.k}</span><span class="old">${esc(String(c.from)).slice(0,80)}</span><span class="new">${esc(String(c.to)).slice(0,120)}</span>`).join("<br>")));
+  d.drop.forEach(x=>row("drop",x.id,x.title,`<b>${esc(x.title)}</b> is no longer in the tracker → status <i>dropped</i>`));
+  if(picks.length)box.append(el("div",{style:"overflow:auto;max-height:60vh"},t));else box.append(el("p",{class:"sum"},"Nothing to change — the board already matches the file."));
+  const msg=el("span",{class:"sum"});
+  box.append(el("div",{class:"row"},el("button",{class:"primary",disabled:!picks.length,onclick:async e=>{e.currentTarget.disabled=true;msg.textContent="Applying…";try{const n=await applyDiff(d,picks);msg.textContent=`Done: ${n} card(s) updated.`;setTimeout(()=>m.remove(),1200);}catch(err){msg.textContent="Failed: "+(err.message||err);e.currentTarget.disabled=false;}}},"Apply"),el("button",{class:"ghost",onclick:()=>m.remove()},"Cancel"),msg));
+  document.body.append(m);
+}
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+async function applyDiff(d,picks){
+  const on=(kind,id)=>picks.some(p=>p.kind===kind&&p.id===id&&p.cb.checked);
+  let n=0;
+  const inserts=d.create.filter(x=>on("create",x.id)).map(x=>x.row);
+  if(inserts.length){const {error}=await sb.from("cards").insert(inserts);if(error)throw error;n+=inserts.length;}
+  for(const x of d.change){if(!on("change",x.id))continue;const {error}=await sb.from("cards").update(x.patch).eq("id",x.id);if(error)throw error;n++;}
+  for(const x of d.drop){if(!on("drop",x.id))continue;const {error}=await sb.from("cards").update({status:"dropped",synced_at:d.ts}).eq("id",x.id);if(error)throw error;n++;}
+  await loadAll();return n;
+}
+$("#syncBtn").addEventListener("click",()=>$("#syncFile").click());
+$("#syncFile").addEventListener("change",async e=>{
+  const f=e.target.files[0];if(!f)return;e.target.value="";
+  try{const buf=await f.arrayBuffer();const recs=parseTracker(buf,f.name);showDiff(diffTracker(recs),f.name,recs);}
+  catch(err){$("#status").textContent="Could not read the file: "+(err.message||err);}
+});
+$("#exportBtn").addEventListener("click",()=>{
+  const W=waves();
+  const hdr=["#","Part of","Category","Type","Action","Details","Owner","Target due date","PQE follower","Size","Status (board)","Layer (board)","Company (board)","Depends on (board)","Wave (board)","Board note","Last update","By"];
+  const TYPE={D:"(0) Decision",P1:"(1) Priority Action",P2:"(2) Action",P3:"(3) P3 Action"};
+  const tops=Object.values(cards).filter(c=>!c.parent).sort((a,b)=>(a.prio||"").localeCompare(b.prio||"")||a.id.localeCompare(b.id,undefined,{numeric:true}));
+  const ordered=[];tops.forEach(c=>{ordered.push(c);children(c.id).sort((a,b)=>a.id.localeCompare(b.id,undefined,{numeric:true})).forEach(k=>ordered.push(k));});
+  const rows=ordered.map(c=>[c.id,c.parent||"",c.category||"",TYPE[c.prio]||c.prio,c.title,c.details||"",c.owner,c.due,c.follower,c.size||"",isEpic(c)?`${statusOf(c)} (${progress(c)})`:c.status,c.layer,c.company,(c.deps||[]).join(", "),W[c.id]||0,c.note,(c.updatedAt||"").slice(0,16).replace("T"," "),c.updatedBy||""]);
+  const ws=XLSX.utils.aoa_to_sheet([hdr,...rows]);ws["!cols"]=[7,7,18,18,40,60,24,14,18,6,14,26,10,16,6,50,16,24].map(w=>({wch:w}));
+  const wb=XLSX.utils.book_new();XLSX.utils.book_append_sheet(wb,ws,"Actions");
+  XLSX.writeFile(wb,"ViAAS_Action_Board_"+new Date().toISOString().slice(0,10)+".xlsx");
+});
+
 // ---------- boot
-["#vMap","#vSeq","#vPeople"].forEach((s,i)=>$(s).addEventListener("click",()=>{view=["map","seq","people"][i];["#vMap","#vSeq","#vPeople"].forEach((x,j)=>$(x).setAttribute("aria-pressed",String(i===j)));$("#arrows").checked=view==="seq";render();}));
+const VIEWS=[["#vMap","map"],["#vSeq","seq"],["#vKanban","kanban"],["#vBacklog","backlog"],["#vReview","review"],["#vPeople","people"]];
+VIEWS.forEach(([s,v])=>$(s).addEventListener("click",()=>{view=v;VIEWS.forEach(([x,w])=>$(x).setAttribute("aria-pressed",String(w===v)));$("#arrows").checked=view==="seq";render();}));
+$("#votersBtn").addEventListener("click",showVoters);
 $("#q").addEventListener("input",e=>{filters.q=e.target.value.trim();render();});
 $("#arrows").addEventListener("change",()=>drawLinks(sel));$("#hideDone").addEventListener("change",render);
 $("#add").addEventListener("click",addCard);
