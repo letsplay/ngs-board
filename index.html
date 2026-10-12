@@ -157,7 +157,8 @@ button.small{font-size:12px;padding:4px 8px}
   <label class="tog"><input id="arrows" type="checkbox"> Dependencies</label>
   <label class="tog"><input id="hideDone" type="checkbox"> Hide done</label>
   <button id="add" class="primary" hidden>+ Card</button>
-  <button id="syncBtn" class="ghost small" hidden title="Read the SharePoint tracker (.xlsx or .csv) and show what would change">Sync from tracker</button><input id="syncFile" type="file" accept=".xlsx,.xlsm,.xls,.csv" hidden>
+  <a id="trackerLink" class="ghost small" hidden target="_blank" rel="noopener" title="Open the tracker on SharePoint (download it, then Sync from tracker)" style="text-decoration:none;display:inline-flex;align-items:center">Open tracker ↗</a>
+  <button id="syncBtn" class="ghost small" hidden title="Pick the tracker file (.xlsx or .csv — from your OneDrive-synced folder or a download) and see what would change before applying">Sync from tracker</button><input id="syncFile" type="file" accept=".xlsx,.xlsm,.xls,.csv" hidden>
   <button id="exportBtn" class="ghost small" hidden title="Download the board as an Excel file in the tracker layout">Export .xlsx</button>
   <button id="votersBtn" class="ghost small" hidden title="Who votes per layer, WIP limit">Voters</button>
   <span class="status" id="status">Connecting…</span>
@@ -442,7 +443,7 @@ async function afterSignIn(){
     showAuth(`${email} is signed in but is not on the editors list. Ask the board owner to add it, then reload.`);
     return;
   }
-  canWrite=true;$("#add").hidden=false;$("#syncBtn").hidden=false;$("#exportBtn").hidden=false;$("#votersBtn").hidden=false;$("#who").textContent=email;$("#signout").hidden=false;$("#pwbtn").hidden=false;
+  canWrite=true;$("#add").hidden=false;$("#syncBtn").hidden=false;if(BOARD_CONFIG.TRACKER_URL){$("#trackerLink").href=BOARD_CONFIG.TRACKER_URL;$("#trackerLink").hidden=false;}$("#exportBtn").hidden=false;$("#votersBtn").hidden=false;$("#who").textContent=email;$("#signout").hidden=false;$("#pwbtn").hidden=false;
   try{await loadAll();subscribe();}catch(e){$("#status").textContent="Could not load cards: "+(e.message||"error");}
 }
 async function boot(){
