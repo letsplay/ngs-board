@@ -1,0 +1,364 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>ViAAS Action Board</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500&display=swap">
+<style>
+[hidden]{display:none!important}
+html,body{margin:0}
+img{max-width:100%}
+/* Layout: a fixed toolbar, then one wide board (rows × columns) that scrolls inside its own frame; a side panel edits one card. */
+:root{
+  --bg:#f6f7f9; --panel:#ffffff; --fg:#1f2430; --muted:#5f6878; --line:#dde2ea; --cell:#fafbfc;
+  --accent:#1f7fb8; --accent-soft:#e3f0f9;
+  --p-d:#6b4fa8; --p-d-bg:#efe9f8; --p-1:#c0392b; --p-1-bg:#fbe9e7; --p-2:#b7791f; --p-2-bg:#fdf3e1; --p-3:#5f6878; --p-3-bg:#eef0f3;
+  --arrow:#1f7fb8; --arrow-dim:#c9d1db; --wait:#c2410c;
+  --font-body:"IBM Plex Sans",system-ui,Segoe UI,Helvetica,Arial,sans-serif; --font-mono:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){ --bg:#15181e; --panel:#1d2129; --fg:#e8ebf0; --muted:#9aa4b3; --line:#2f3642; --cell:#1a1e25; --accent:#5aa9e0; --accent-soft:#1e3242; --p-d:#b39ddb; --p-d-bg:#2b2440; --p-1:#ef6a5a; --p-1-bg:#3a2320; --p-2:#e0a83c; --p-2-bg:#3a3020; --p-3:#aab3c0; --p-3-bg:#272c35; --arrow:#5aa9e0; --arrow-dim:#3a4454; --wait:#f0955a; color-scheme:dark } }
+:root[data-theme="dark"]{ --bg:#15181e; --panel:#1d2129; --fg:#e8ebf0; --muted:#9aa4b3; --line:#2f3642; --cell:#1a1e25; --accent:#5aa9e0; --accent-soft:#1e3242; --p-d:#b39ddb; --p-d-bg:#2b2440; --p-1:#ef6a5a; --p-1-bg:#3a2320; --p-2:#e0a83c; --p-2-bg:#3a3020; --p-3:#aab3c0; --p-3-bg:#272c35; --arrow:#5aa9e0; --arrow-dim:#3a4454; --wait:#f0955a; color-scheme:dark }
+html,body{height:100%}
+body{background:var(--bg);color:var(--fg);font-family:var(--font-body);font-size:14px;line-height:1.35;display:flex;flex-direction:column;min-height:100%}
+button,select,input,textarea{font:inherit;color:inherit}
+.bar{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--panel);border-bottom:1px solid var(--line);padding:10px 16px;display:flex;flex-wrap:wrap;gap:8px 14px;align-items:center}
+.bar h1{font-size:16px;font-weight:600;margin:0 6px 0 0;letter-spacing:.01em}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:8px;overflow:hidden}
+.seg button{background:transparent;border:0;padding:6px 12px;cursor:pointer;color:var(--muted)}
+.seg button[aria-pressed="true"]{background:var(--accent-soft);color:var(--accent);font-weight:600}
+.chip{border:1px solid var(--line);background:transparent;border-radius:999px;padding:4px 10px;font-size:12.5px;cursor:pointer;color:var(--muted)}
+.chip[aria-pressed="true"]{border-color:var(--accent);color:var(--accent);background:var(--accent-soft)}
+.bar input[type=search]{border:1px solid var(--line);border-radius:8px;padding:6px 10px;background:var(--cell);min-width:160px}
+.bar label.tog{display:inline-flex;gap:6px;align-items:center;font-size:12.5px;color:var(--muted);cursor:pointer}
+.status{font-size:12px;color:var(--muted);margin-left:auto}
+.status b{color:var(--accent)}
+.primary{background:var(--accent);color:#fff;border:0;border-radius:8px;padding:6px 12px;cursor:pointer;font-weight:600}
+.ghost{background:transparent;border:1px solid var(--line);border-radius:8px;padding:6px 12px;cursor:pointer;color:var(--muted)}
+.wrap{flex:1;display:flex;min-height:0}
+.boardwrap{flex:1;overflow:auto;padding:14px 16px 24px;position:relative;min-width:0}
+.board{display:grid;gap:6px;position:relative;min-width:900px}
+.hc{background:var(--fg);color:var(--bg);font-weight:600;padding:8px;border-radius:6px;text-align:center;font-size:13px;position:sticky;top:0;z-index:2}
+.hr{color:#fff;font-weight:600;padding:10px 8px;border-radius:6px;font-size:12.5px;display:flex;align-items:center;position:sticky;left:0;z-index:2}
+.corner{position:sticky;left:0;top:0;z-index:3;background:var(--bg)}
+.cell{background:var(--cell);border:1px dashed var(--line);border-radius:6px;min-height:72px;padding:6px;display:flex;flex-direction:column;gap:6px}
+.cell.over{border-color:var(--accent);background:var(--accent-soft)}
+.card{background:var(--panel);border:1px solid var(--line);border-left:5px solid var(--p-3);border-radius:6px;padding:6px 8px;font-size:12px;line-height:1.3;cursor:grab;position:relative;box-shadow:0 1px 2px rgba(0,0,0,.06)}
+.card:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
+.card.sel{outline:2px solid var(--accent)}
+.card.dim{opacity:.35}
+.card .id{font-family:var(--font-mono);font-size:11px;color:var(--muted)}
+.card .t{font-weight:600;display:block;margin:2px 0}
+.card .m{color:var(--muted);font-size:11px}
+.card .after{display:block;font-size:11px;color:var(--wait);margin-top:3px;font-weight:500}
+.card .after b{font-weight:600}
+.legend .lk{display:inline-block;width:18px;height:0;border-top:2px solid var(--arrow);vertical-align:middle;margin-right:4px}
+.legend .lk.w{border-color:var(--wait)}
+.card.pD{border-left-color:var(--p-d)} .card.pP1{border-left-color:var(--p-1)} .card.pP2{border-left-color:var(--p-2)} .card.pP3{border-left-color:var(--p-3)}
+.pill{display:inline-block;font-size:10px;font-weight:700;padding:1px 6px;border-radius:10px;margin-right:4px;letter-spacing:.02em;text-transform:uppercase}
+.pD .pill{background:var(--p-d-bg);color:var(--p-d)} .pP1 .pill{background:var(--p-1-bg);color:var(--p-1)} .pP2 .pill{background:var(--p-2-bg);color:var(--p-2)} .pP3 .pill{background:var(--p-3-bg);color:var(--p-3)}
+.card .st{position:absolute;right:6px;top:6px;font-size:10px;color:var(--muted)}
+.card .st.done{color:#1f7a4d;font-weight:700}
+svg.links{position:absolute;left:0;top:0;pointer-events:none;overflow:visible}
+.panel{width:340px;max-width:100%;border-left:1px solid var(--line);background:var(--panel);padding:14px 16px;overflow:auto;display:flex;flex-direction:column;gap:10px}
+.panel h2{font-size:14px;margin:0;font-weight:600}
+.panel label{display:flex;flex-direction:column;gap:3px;font-size:12px;color:var(--muted)}
+.panel input,.panel select,.panel textarea{border:1px solid var(--line);border-radius:6px;padding:6px 8px;background:var(--cell);font-size:13px;color:var(--fg)}
+.panel textarea{min-height:70px;resize:vertical}
+.deps{display:flex;flex-wrap:wrap;gap:4px}
+.deps button{border:1px solid var(--line);border-radius:6px;background:var(--cell);padding:2px 6px;font-size:11px;cursor:pointer;font-family:var(--font-mono)}
+.deps button[aria-pressed="true"]{background:var(--accent-soft);border-color:var(--accent);color:var(--accent)}
+.row{display:flex;gap:8px;flex-wrap:wrap}
+.row>*{flex:1;min-width:0}
+.empty{padding:40px 16px;text-align:center;color:var(--muted);max-width:520px;margin:40px auto}
+.people{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:10px;padding:14px 16px}
+.person{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:10px}
+.person h3{margin:0 0 6px;font-size:13px;display:flex;justify-content:space-between}
+.person .n{font-family:var(--font-mono);color:var(--muted);font-size:11px}
+.person ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:4px}
+.person li{font-size:11.5px;display:flex;gap:6px;align-items:baseline}
+.person li .id{font-family:var(--font-mono);color:var(--muted);min-width:44px}
+.legend{font-size:11.5px;color:var(--muted);padding:0 16px 10px}
+.legend span{margin-right:12px}
+.ro{background:var(--p-2-bg);color:var(--p-2);border-radius:6px;padding:2px 8px;font-size:11.5px}
+@media (max-width:700px){ .wrap{flex-direction:column} .panel{width:auto;border-left:0;border-top:1px solid var(--line)} .board{min-width:760px} }
+@media (prefers-reduced-motion:no-preference){ .card{transition:opacity .15s} }
+
+.who{font-size:12px;color:var(--muted);margin-left:auto}
+button.small{font-size:12px;padding:4px 8px}
+.auth{position:fixed;inset:0;z-index:20;background:color-mix(in srgb,var(--bg) 85%,transparent);backdrop-filter:blur(3px);display:flex;align-items:center;justify-content:center;padding:16px}
+.authbox{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:22px 24px;max-width:420px;width:100%;display:flex;flex-direction:column;gap:10px;box-shadow:0 12px 40px rgba(0,0,0,.18)}
+.authbox h2{margin:0;font-size:18px}.authbox p{margin:0;font-size:13px;color:var(--muted);line-height:1.45}
+.authbox label{display:flex;flex-direction:column;gap:4px;font-size:12px;color:var(--muted)}
+.authbox input{font:inherit;padding:8px 10px;border:1px solid var(--line);border-radius:6px;background:var(--bg);color:var(--fg)}
+.authbox .msg{min-height:1.4em;color:var(--fg)}
+</style>
+</head>
+<body>
+
+
+<header class="bar">
+  <h1>ViAAS Action Board</h1>
+  <div class="seg" role="group" aria-label="View">
+    <button id="vMap" aria-pressed="true">Map</button>
+    <button id="vSeq" aria-pressed="false">Sequence</button>
+    <button id="vPeople" aria-pressed="false">People</button>
+  </div>
+  <div id="coChips"></div>
+  <div id="prChips"></div>
+  <input id="q" type="search" placeholder="Filter by person or text" aria-label="Filter">
+  <label class="tog"><input id="arrows" type="checkbox"> Dependencies</label>
+  <label class="tog"><input id="hideDone" type="checkbox"> Hide done</label>
+  <button id="add" class="primary" hidden>+ Card</button>
+  <span class="status" id="status">Connecting…</span>
+  <span class="who" id="who"></span><button id="signout" class="ghost small" hidden>Sign out</button>
+</header>
+<div class="legend">
+  <span><b style="color:var(--p-d)">■</b> Decision</span><span><b style="color:var(--p-1)">■</b> Priority action</span><span><b style="color:var(--p-2)">■</b> Action</span><span><b style="color:var(--p-3)">■</b> P3</span>
+  <span id="lgArrows"><span class="lk"></span>arrow = the card at the arrowhead must wait for the card at the tail · <b>after #…</b> on a card lists what it waits for</span><span id="lgFocus" hidden><span class="lk w"></span>what the selected card waits for &nbsp;<span class="lk"></span>what it unlocks</span><span>Drag a card to another cell to change its layer or company; click it to edit.</span>
+</div>
+
+<div id="auth" class="auth" hidden>
+  <form id="authForm" class="authbox">
+    <h2>ViAAS Action Board</h2>
+    <p>Shared working board for the PathoQuest · PQE · Charles River workshop actions. Sign in with your work e-mail; you receive a one-time link, no password.</p>
+    <label>E-mail <input id="authEmail" type="email" required placeholder="name@company.com" autocomplete="email"></label>
+    <button class="primary" type="submit">Send me a sign-in link</button>
+    <p id="authMsg" class="msg"></p>
+  </form>
+</div>
+<div class="wrap">
+  <div class="boardwrap" id="boardwrap"><div id="board" class="board"></div><svg class="links" id="links"></svg><div id="people" class="people" hidden></div></div>
+  <aside class="panel" id="panel" hidden></aside>
+</div>
+
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
+<script src="config.js"></script>
+<script>
+
+const LAYERS=["Governance & scope","Infrastructure & data platform","SDLC & tools","Bioinformatics pipeline","Validation & quality","Viral expert & operations"];
+const LCOL={"Governance & scope":"#6b4fa8","Infrastructure & data platform":"#b03a7a","SDLC & tools":"#1f5fa8","Bioinformatics pipeline":"#0c8aa6","Validation & quality":"#1f7a4d","Viral expert & operations":"#c56a14"};
+const COS=["PTQ","PQE","CRL","Joint"];
+const PRIO={"D":"Decision","P1":"Priority action","P2":"Action","P3":"P3 action"};
+const STATUS=["open","in progress","done","blocked"];
+let cards={}; let db=null, userCap=null, canWrite=null, view="map", sel=null, filters={co:new Set(),pr:new Set(),q:""}, unsub=null;
+const $=s=>document.querySelector(s);
+const el=(t,a={},...ch)=>{const e=document.createElement(t);for(const[k,v]of Object.entries(a)){if(k==="class")e.className=v;else if(k.startsWith("on"))e.addEventListener(k.slice(2),v);else if(k==="html")e.innerHTML=v;else e.setAttribute(k,v);}for(const c of ch){if(c==null)continue;e.append(c.nodeType?c:document.createTextNode(c));}return e;};
+
+// ---------- waves (dependency depth)
+function waves(){const w={};const depth=(id,seen=new Set())=>{if(w[id]!=null)return w[id];const c=cards[id];if(!c||seen.has(id))return 0;seen.add(id);const ds=(c.deps||[]).filter(d=>cards[d]);w[id]=ds.length?1+Math.max(...ds.map(d=>depth(d,seen))):0;return w[id];};Object.keys(cards).forEach(id=>depth(id));return w;}
+function unlocks(){const u={};Object.values(cards).forEach(c=>(c.deps||[]).forEach(d=>{u[d]=(u[d]||0)+1}));return u;}
+
+// ---------- filters
+function visible(c){
+  if(filters.co.size&&!filters.co.has(c.company))return false;
+  if(filters.pr.size&&!filters.pr.has(c.prio))return false;
+  if($("#hideDone").checked&&c.status==="done")return false;
+  if(filters.q){const q=filters.q.toLowerCase();const hay=[c.id,c.title,c.owner,c.follower,c.note].join(" ").toLowerCase();if(!hay.includes(q))return false;}
+  return true;
+}
+function chips(){
+  const cc=$("#coChips");cc.innerHTML="";COS.forEach(co=>cc.append(el("button",{class:"chip","aria-pressed":String(filters.co.has(co)),onclick:()=>{filters.co.has(co)?filters.co.delete(co):filters.co.add(co);render();}},co)));
+  const pc=$("#prChips");pc.innerHTML="";Object.entries(PRIO).forEach(([k,v])=>pc.append(el("button",{class:"chip","aria-pressed":String(filters.pr.has(k)),onclick:()=>{filters.pr.has(k)?filters.pr.delete(k):filters.pr.add(k);render();}},v)));
+}
+
+// ---------- card element
+function cardEl(c,extra){
+  const d=el("div",{class:"card p"+c.prio+(sel===c.id?" sel":""),draggable:canWrite?"true":"false",tabindex:"0","data-id":c.id});
+  d.innerHTML=`<span class="pill">${PRIO[c.prio]||c.prio}</span><span class="id">#${c.id}</span>${c.due?` <span class="id">· ${c.due}</span>`:""}<span class="t"></span><span class="m"></span>${(c.deps||[]).filter(d=>cards[d]).length?`<span class="after">after <b>${(c.deps||[]).filter(d=>cards[d]).map(d=>"#"+d).join(", ")}</b></span>`:""}${c.status&&c.status!=="open"?`<span class="st ${c.status==="done"?"done":""}">${c.status}</span>`:""}`;
+  d.querySelector(".t").textContent=c.title;
+  d.querySelector(".m").textContent=[c.owner?"Owner: "+c.owner:"",c.follower&&c.follower!=="-"?"PQE: "+c.follower:"",extra||""].filter(Boolean).join(" · ");
+  d.addEventListener("click",()=>{sel=c.id;openPanel(c.id);render();});
+  d.addEventListener("keydown",e=>{if(e.key==="Enter"){sel=c.id;openPanel(c.id);render();}});
+  d.addEventListener("dragstart",e=>{e.dataTransfer.setData("text/plain",c.id);});
+  d.addEventListener("mouseenter",()=>drawLinks(c.id)); d.addEventListener("mouseleave",()=>drawLinks(sel));
+  return d;
+}
+function dropCell(cell,onDrop){
+  cell.addEventListener("dragover",e=>{if(!canWrite)return;e.preventDefault();cell.classList.add("over");});
+  cell.addEventListener("dragleave",()=>cell.classList.remove("over"));
+  cell.addEventListener("drop",e=>{e.preventDefault();cell.classList.remove("over");const id=e.dataTransfer.getData("text/plain");if(id&&cards[id])onDrop(cards[id]);});
+}
+
+// ---------- views
+function render(){
+  chips();
+  const b=$("#board"), pp=$("#people"); b.innerHTML=""; pp.hidden=view!=="people"; b.hidden=view==="people"; $("#links").hidden=view==="people";
+  const list=Object.values(cards);
+  if(!list.length){b.append(el("div",{class:"empty",html:"<b>No cards yet.</b><br>Cards appear here as soon as they are loaded from the workshop tracker. Use <b>+ Card</b> to add one by hand."}));return;}
+  if(view==="people")return renderPeople(list);
+  const W=waves(), U=unlocks();
+  const cols=view==="map"?COS:[0,1,2,3].map(k=>`Wave ${k}`);
+  const rows=view==="map"?LAYERS:COS;
+  b.style.gridTemplateColumns=`170px repeat(${cols.length},minmax(190px,1fr))`; b.style.columnGap=view==="seq"?"40px":"26px";
+  b.append(el("div",{class:"corner"}));
+  cols.forEach(c=>b.append(el("div",{class:"hc"},view==="map"?c:c+(c==="Wave 0"?" · no prerequisite":""))));
+  rows.forEach((r,ri)=>{
+    b.append(el("div",{class:"hr",style:`background:${view==="map"?LCOL[r]:"#4a5568"}`},r));
+    cols.forEach((c,ci)=>{
+      const cell=el("div",{class:"cell"});
+      const items=list.filter(k=>visible(k)&&(view==="map"?(k.layer===r&&k.company===c):(k.company===r&&Math.min(W[k.id]||0,3)===ci)));
+      items.sort((a,b)=>(U[b.id]||0)-(U[a.id]||0)||a.prio.localeCompare(b.prio));
+      items.forEach(k=>cell.append(cardEl(k,view==="seq"&&U[k.id]?`unlocks ${U[k.id]}`:(view==="map"?`layer ${k.layer.split(" ")[0]}`:""))));
+      dropCell(cell,async k=>{if(view==="map"){if(k.layer===r&&k.company===c)return;await save(k.id,{layer:r,company:c});}else{if(k.company===r)return;await save(k.id,{company:r});}});
+      b.append(cell);
+    });
+  });
+  requestAnimationFrame(()=>drawLinks(sel));
+}
+function renderPeople(list){
+  const pp=$("#people");pp.innerHTML="";
+  const load={};const add=(n,c,role)=>{n=n.trim();if(!n||n==="-"||/^tbc$/i.test(n)||/^lab/i.test(n))return;(load[n]=load[n]||{own:[],fol:[]})[role].push(c);};
+  list.filter(visible).forEach(c=>{(c.owner||"").replace("→","/").split(/[\/,]/).forEach(n=>add(n.replace(/\(.*?\)/g,""),c,"own"));(c.follower||"").split(/[\/,]/).forEach(n=>add(n,c,"fol"));});
+  Object.entries(load).sort((a,b)=>(b[1].own.length*2+b[1].fol.length)-(a[1].own.length*2+a[1].fol.length)).forEach(([n,v])=>{
+    const p=el("div",{class:"person"});p.append(el("h3",{},n,el("span",{class:"n"},`${v.own.length} own · ${v.fol.length} follow`)));
+    const ul=el("ul");[...v.own.map(c=>[c,"owner"]),...v.fol.map(c=>[c,"follower"])].forEach(([c,role])=>ul.append(el("li",{},el("span",{class:"id"},"#"+c.id),el("span",{},`${c.title} `,el("span",{class:"n"},`· ${role}${c.status&&c.status!=="open"?" · "+c.status:""}`)))));
+    p.append(ul);pp.append(p);
+  });
+}
+function drawLinks(focus){
+  const svg=$("#links"), wrap=$("#boardwrap"); if(view==="people"){svg.innerHTML="";return;}
+  const on=$("#arrows").checked;
+  $("#lgFocus").hidden=!focus; $("#lgArrows").hidden=!!focus;
+  svg.setAttribute("width",wrap.scrollWidth);svg.setAttribute("height",wrap.scrollHeight);
+  const mk=(id,col)=>`<marker id="${id}" markerWidth="7" markerHeight="7" refX="6" refY="3.5" orient="auto"><path d="M0,0 L7,3.5 L0,7z" fill="${col}"/></marker>`;
+  let s='<defs>'+mk("a","var(--arrow)")+mk("ad","var(--arrow-dim)")+mk("aw","var(--wait)")+'</defs>';
+  const wr=wrap.getBoundingClientRect();
+  const pos=id=>{const e=wrap.querySelector(`.card[data-id="${CSS.escape(id)}"]`);if(!e)return null;const r=e.getBoundingClientRect();return{l:r.left-wr.left+wrap.scrollLeft,t:r.top-wr.top+wrap.scrollTop,w:r.width,h:r.height};};
+  // collect edges first so vertical channel segments can be spread out instead of drawn on top of each other
+  const edges=[];
+  Object.values(cards).forEach(c=>(c.deps||[]).forEach(d=>{
+    const rel=focus&&(c.id===focus||d===focus); if(!on&&!rel)return;
+    const A=pos(d),B=pos(c.id);if(!A||!B)return;
+    edges.push({A,B,rel,dim:on&&focus&&!rel,kind:focus&&c.id===focus?"wait":(focus&&d===focus?"unlock":"plain")});
+  }));
+  // channel key: the gap the vertical run lives in (right of the source column, or left of it when the target is to the left)
+  const chan={};
+  edges.forEach(e=>{const {A,B}=e;
+    if(B.l>A.l+A.w-4){e.dir="r";e.key="r"+Math.round(A.l+A.w);}
+    else if(A.l>B.l+B.w-4){e.dir="l";e.key="l"+Math.round(A.l);}
+    else{e.dir="v";e.key="v"+Math.round(A.l+A.w);}
+    (chan[e.key]=chan[e.key]||[]).push(e);
+  });
+  Object.values(chan).forEach(list=>{list.sort((a,b)=>(a.B.t+a.B.h/2)-(b.B.t+b.B.h/2));list.forEach((e,i)=>{e.off=i-(list.length-1)/2;});});
+  const R=6;
+  edges.forEach(e=>{const {A,B,dir,off}=e;let d;
+    const step=Math.min(5,30/Math.max(1,Math.abs(off)*2+1));
+    if(dir==="r"){const x1=A.l+A.w,y1=A.t+A.h/2,x2=B.l,y2=B.t+B.h/2;const xc=x1+20+off*5;const sy=y2>y1?1:-1;
+      d=Math.abs(y2-y1)<R*2?`M${x1},${y1} H${x2}`:`M${x1},${y1} H${xc-R} q${R},0 ${R},${R*sy} V${y2-R*sy} q0,${R*sy} ${R},${R*sy} H${x2}`;}
+    else if(dir==="l"){const x1=A.l,y1=A.t+A.h/2,x2=B.l+B.w,y2=B.t+B.h/2;const xc=x1-20+off*5;const sy=y2>y1?1:-1;
+      d=Math.abs(y2-y1)<R*2?`M${x1},${y1} H${x2}`:`M${x1},${y1} H${xc+R} q${-R},0 ${-R},${R*sy} V${y2-R*sy} q0,${R*sy} ${-R},${R*sy} H${x2}`;}
+    else{ // same column: loop out through the right-hand channel
+      const x1=A.l+A.w,y1=A.t+A.h/2,x2=B.l+B.w,y2=B.t+B.h/2;const xc=x1+12+Math.abs(off)*5;const sy=y2>y1?1:-1;
+      d=`M${x1},${y1} H${xc-R} q${R},0 ${R},${R*sy} V${y2-R*sy} q0,${R*sy} ${-R},${R*sy} H${x2}`;}
+    const col=e.dim?"var(--arrow-dim)":(e.kind==="wait"?"var(--wait)":"var(--arrow)");
+    const m=e.dim?"ad":(e.kind==="wait"?"aw":"a");
+    s+=`<path d="${d}" fill="none" stroke="${col}" stroke-width="${e.rel?2.2:1.4}" stroke-opacity="${e.dim?.55:.95}" stroke-linejoin="round" marker-end="url(#${m})"/>`;
+  });
+  svg.innerHTML=s;
+}
+
+// ---------- panel
+function openPanel(id){
+  const p=$("#panel"), c=cards[id]; if(!c){p.hidden=true;return;} p.hidden=false; p.innerHTML="";
+  const f={};const field=(k,label,type="input",opts)=>{let i;if(type==="select"){i=el("select",{id:"f_"+k});opts.forEach(([v,t])=>i.append(el("option",{value:v},t)));i.value=c[k]||opts[0][0];}else if(type==="textarea"){i=el("textarea",{id:"f_"+k});i.value=c[k]||"";}else{i=el("input",{id:"f_"+k,type:"text"});i.value=c[k]||"";}i.disabled=!canWrite;f[k]=i;return el("label",{},label,i);};
+  p.append(el("h2",{},`#${c.id}`)); if(!canWrite) p.append(el("span",{class:"ro"},"Read-only for you"));
+  p.append(field("title","Title"));
+  p.append(el("div",{class:"row"},field("layer","Layer","select",LAYERS.map(l=>[l,l])),field("company","Company","select",COS.map(x=>[x,x]))));
+  p.append(el("div",{class:"row"},field("owner","Owner"),field("follower","PQE follower")));
+  p.append(el("div",{class:"row"},field("prio","Priority","select",Object.entries(PRIO)),field("status","Status","select",STATUS.map(x=>[x,x])),field("due","Due date")));
+  p.append(field("note","Note / decision","textarea"));
+  const depsBox=el("div",{class:"deps"});const depSet=new Set(c.deps||[]);
+  Object.values(cards).filter(o=>o.id!==c.id).sort((a,b)=>a.id.localeCompare(b.id,undefined,{numeric:true})).forEach(o=>depsBox.append(el("button",{type:"button",title:o.title,"aria-pressed":String(depSet.has(o.id)),disabled:!canWrite,onclick:e=>{depSet.has(o.id)?depSet.delete(o.id):depSet.add(o.id);e.currentTarget.setAttribute("aria-pressed",String(depSet.has(o.id)));}},"#"+o.id)));
+  p.append(el("label",{},"Depends on (click to toggle)",depsBox));
+  const U=unlocks();p.append(el("div",{class:"m",style:"font-size:12px;color:var(--muted)"},`Unlocks ${U[c.id]||0} card(s) · source: ${c.source||"-"}`));
+  if(canWrite){
+    const msg=el("span",{style:"font-size:12px;color:var(--muted)"});
+    p.append(el("div",{class:"row"},
+      el("button",{class:"primary",onclick:async()=>{const patch={};for(const k in f)patch[k]=f[k].value;patch.deps=[...depSet];msg.textContent="Saving…";try{await save(c.id,patch);msg.textContent="Saved";}catch(e){msg.textContent="Could not save: "+(e.message||e.code||"error");}}},"Save"),
+      el("button",{class:"ghost",onclick:()=>{sel=null;p.hidden=true;render();}},"Close"),
+      el("button",{class:"ghost",onclick:async e=>{if(e.currentTarget.dataset.arm){try{await removeCard(c.id);sel=null;p.hidden=true;}catch(err){msg.textContent="Could not delete: "+(err.message||"error");}}else{e.currentTarget.dataset.arm="1";e.currentTarget.textContent="Confirm delete";}}},"Delete")),msg);
+  } else p.append(el("button",{class:"ghost",onclick:()=>{sel=null;p.hidden=true;render();}},"Close"));
+}
+
+// ---------- data layer (Supabase) -------------------------------------------------
+const FIELDS=["title","layer","company","owner","follower","prio","status","due","note","deps","source"];
+let sb=null, session=null, channel=null;
+function row2card(r){return {id:r.id,title:r.title,layer:r.layer,company:r.company,owner:r.owner||"",follower:r.follower||"",prio:r.prio,status:r.status||"open",due:r.due||"",note:r.note||"",deps:r.deps||[],source:r.source||"",updatedAt:r.updated_at,updatedBy:r.updated_by};}
+async function loadAll(){
+  const {data,error}=await sb.from("cards").select("*");
+  if(error)throw error;
+  const next={};data.forEach(r=>next[r.id]=row2card(r));cards=next;render();
+  if(sel&&!cards[sel]){sel=null;$("#panel").hidden=true;}
+}
+async function save(id,patch){
+  if(!sb||!canWrite)throw new Error("read-only");
+  const row={};FIELDS.forEach(k=>{if(k in patch)row[k]=patch[k];});
+  const {error}=await sb.from("cards").update(row).eq("id",id);
+  if(error)throw error;
+  if(cards[id])Object.assign(cards[id],patch);render();
+}
+async function addCard(){
+  let i=1;while(cards["N"+i])i++;const id="N"+i;
+  const row={id,title:"New card",layer:LAYERS[0],company:"PQE",owner:"",follower:"",prio:"P2",status:"open",due:"",deps:[],note:"",source:"board"};
+  const {error}=await sb.from("cards").insert(row);
+  if(error){$("#status").textContent="Could not add: "+error.message;return;}
+  cards[id]=row2card(row);render();sel=id;openPanel(id);
+}
+async function removeCard(id){
+  const {error}=await sb.from("cards").delete().eq("id",id);
+  if(error)throw error;
+  delete cards[id];render();
+}
+function subscribe(){
+  if(channel)return;
+  channel=sb.channel("cards-live").on("postgres_changes",{event:"*",schema:"public",table:"cards"},p=>{
+    if(p.eventType==="DELETE"){delete cards[p.old.id];if(sel===p.old.id){sel=null;$("#panel").hidden=true;}}
+    else cards[p.new.id]=row2card(p.new);
+    render();
+  }).subscribe(st=>{if(st==="SUBSCRIBED")$("#status").innerHTML="Live · <b>shared</b>";else if(st==="CHANNEL_ERROR"||st==="TIMED_OUT")$("#status").textContent="Live updates lost – reload the page";});
+}
+
+// ---------- auth -------------------------------------------------------------------
+function showAuth(msg){$("#auth").hidden=false;$("#authMsg").textContent=msg||"";}
+async function afterSignIn(){
+  $("#auth").hidden=true;
+  const email=session.user.email;
+  const {data:ok,error}=await sb.rpc("is_editor");
+  if(error||!ok){
+    canWrite=false;$("#add").hidden=true;$("#who").textContent=email;
+    $("#status").textContent="Signed in, but this address is not on the board's list";
+    showAuth(`${email} is signed in but is not on the editors list. Ask the board owner to add it, then reload.`);
+    return;
+  }
+  canWrite=true;$("#add").hidden=false;$("#who").textContent=email;$("#signout").hidden=false;
+  try{await loadAll();subscribe();}catch(e){$("#status").textContent="Could not load cards: "+(e.message||"error");}
+}
+async function boot(){
+  if(!window.BOARD_CONFIG||!BOARD_CONFIG.SUPABASE_URL||BOARD_CONFIG.SUPABASE_URL.includes("YOUR-PROJECT")){$("#status").textContent="config.js not filled in";showAuth("The board is not configured yet: fill config.js with the Supabase project URL and anon key (see README).");return;}
+  sb=supabase.createClient(BOARD_CONFIG.SUPABASE_URL,BOARD_CONFIG.SUPABASE_ANON_KEY);
+  $("#authForm").addEventListener("submit",async e=>{
+    e.preventDefault();const email=$("#authEmail").value.trim();if(!email)return;
+    $("#authMsg").textContent="Sending the link…";
+    const {error}=await sb.auth.signInWithOtp({email,options:{emailRedirectTo:location.origin+location.pathname}});
+    $("#authMsg").textContent=error?("Could not send: "+error.message):"Check your mailbox and open the link (same browser). The page will unlock by itself.";
+  });
+  $("#signout").addEventListener("click",async()=>{await sb.auth.signOut();location.reload();});
+  sb.auth.onAuthStateChange((_ev,s)=>{if(s&&!session){session=s;afterSignIn();}});
+  const {data}=await sb.auth.getSession();
+  if(data.session){session=data.session;afterSignIn();}else{$("#status").textContent="Not signed in";showAuth("");}
+}
+
+// ---------- boot
+["#vMap","#vSeq","#vPeople"].forEach((s,i)=>$(s).addEventListener("click",()=>{view=["map","seq","people"][i];["#vMap","#vSeq","#vPeople"].forEach((x,j)=>$(x).setAttribute("aria-pressed",String(i===j)));$("#arrows").checked=view==="seq";render();}));
+$("#q").addEventListener("input",e=>{filters.q=e.target.value.trim();render();});
+$("#arrows").addEventListener("change",()=>drawLinks(sel));$("#hideDone").addEventListener("change",render);
+$("#add").addEventListener("click",addCard);
+$("#boardwrap").addEventListener("scroll",()=>drawLinks(sel));window.addEventListener("resize",()=>drawLinks(sel));
+render();
+boot();
+
+</script>
+</body>
+</html>
