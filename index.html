@@ -58,7 +58,10 @@ button,select,input,textarea{font:inherit;color:inherit}
 .pill{display:inline-block;font-size:10px;font-weight:700;padding:1px 6px;border-radius:10px;margin-right:4px;letter-spacing:.02em;text-transform:uppercase}
 .pD .pill{background:var(--p-d-bg);color:var(--p-d)} .pP1 .pill{background:var(--p-1-bg);color:var(--p-1)} .pP2 .pill{background:var(--p-2-bg);color:var(--p-2)} .pP3 .pill{background:var(--p-3-bg);color:var(--p-3)}
 .card .st{display:inline-block;margin-left:6px;font-size:10px;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:.02em}
-.card .pill.epic{background:var(--accent-soft);color:var(--accent);margin-left:4px}
+.card .pill.epic{margin-left:4px}
+.card .etag{display:block;color:#fff;font-size:10.5px;font-weight:600;padding:2px 7px;border-radius:5px;margin:-2px 0 5px;letter-spacing:.01em;line-height:1.25}
+.card.dep-hi{outline:2px solid var(--wait);outline-offset:1px}.card.unlock-hi{outline:2px solid var(--arrow);outline-offset:1px}
+.card .waits{display:block;font-size:11px;color:var(--wait);margin-top:3px}.card .waits b{font-weight:600}
 .epics{grid-column:2 / -1;display:flex;gap:6px;flex-wrap:wrap;align-items:center;font-size:11.5px;color:var(--muted);padding:2px 4px}
 .epics .ep{display:inline-flex;gap:6px;align-items:center;border:1px solid var(--line);border-radius:14px;padding:2px 9px;background:var(--panel);cursor:pointer}.epics .ep b{font-family:"IBM Plex Mono",monospace;font-weight:600;color:var(--accent)}
 .epics .ep .bar{display:inline-block;width:46px;height:6px;border-radius:3px;background:var(--line);overflow:hidden}.epics .ep .bar i{display:block;height:100%;background:#1f7a4d}
@@ -162,7 +165,7 @@ button.small{font-size:12px;padding:4px 8px}
 </header>
 <div class="legend">
   <span><b style="color:var(--p-d)">■</b> Decision</span><span><b style="color:var(--p-1)">■</b> Priority action</span><span><b style="color:var(--p-2)">■</b> Action</span><span><b style="color:var(--p-3)">■</b> P3</span>
-  <span id="lgArrows"><span class="lk"></span>arrow = the card at the arrowhead must wait for the card at the tail · <b>after #…</b> on a card lists what it waits for</span><span id="lgFocus" hidden><span class="lk w"></span>what the selected card waits for &nbsp;<span class="lk"></span>what it unlocks</span><span>Drag a card to another cell to change its layer or company; click it to edit. Epics show their children's progress here; the children themselves live in Kanban and Backlog.</span>
+  <span id="lgArrows"><span class="lk"></span>arrow = the card at the arrowhead must wait for the card at the tail · <b>after #…</b> on a card lists what it waits for</span><span id="lgFocus" hidden><span class="lk w"></span>what the selected card waits for &nbsp;<span class="lk"></span>what it unlocks (on the Kanban: outlined cards)</span><span>Drag a card to another cell to change its layer or company; click it to edit. Epics show their children's progress here; the children themselves live in Kanban and Backlog.</span>
 </div>
 
 <div id="auth" class="auth" hidden>
@@ -198,6 +201,9 @@ const el=(t,a={},...ch)=>{const e=document.createElement(t);for(const[k,v]of Obj
 
 // ---------- epics: a card with children is an epic (computed, no flag). A child's prerequisites are its own (the epic's prerequisites describe the epic, not each child).
 const children=id=>Object.values(cards).filter(c=>c.parent===id);
+const EPAL=["#6b4fa8","#0c8aa6","#c56a14","#1f7a4d","#b03a7a","#1f5fa8","#8a6d00","#b4412f","#2f6f8f","#7a4b2a"];
+function epicColor(id){const ids=[...new Set(Object.values(cards).filter(c=>c.parent).map(c=>c.parent))].sort((a,b)=>a.localeCompare(b,undefined,{numeric:true}));const i=ids.indexOf(id);return EPAL[(i<0?0:i)%EPAL.length];}
+function epicLabel(id){const e=cards[id];if(!e)return "#"+id;let t=e.title.split(/[:(–—;]/)[0].trim();if(t.length>34)t=t.slice(0,32).replace(/\s+\S*$/,"")+"…";return "#"+id+" · "+t;}
 const isEpic=c=>!!c&&children(c.id).length>0;
 const effDeps=c=>(c.deps||[]).filter(x=>cards[x]&&x!==c.id);
 function statusOf(c){if(!isEpic(c))return c.status;const ch=children(c.id);if(ch.every(x=>x.status==="done"||x.status==="dropped"))return "done";if(ch.some(x=>x.status==="in progress"||x.status==="done"))return "in progress";if(ch.some(x=>x.status==="blocked"))return "blocked";return "open";}
@@ -223,9 +229,9 @@ function chips(){
 function cardEl(c,extra){
   const d=el("div",{class:"card p"+c.prio+(sel===c.id?" sel":""),draggable:canWrite?"true":"false",tabindex:"0","data-id":c.id});
   const st=statusOf(c), epic=isEpic(c);
-  d.innerHTML=`<span class="pill">${PRIO[c.prio]||c.prio}</span>${epic?`<span class="pill epic">epic ${progress(c)}</span>`:""}<span class="id">#${c.id}</span>${c.due?` <span class="id">· ${c.due}</span>`:""}${st&&st!=="open"&&view!=="kanban"?`<span class="st ${st==="done"?"done":st==="blocked"?"blocked":st==="dropped"?"dropped":""}">${st}</span>`:""}<span class="t"></span><span class="m"></span>${(c.deps||[]).filter(d=>cards[d]).length?`<span class="after">after <b>${(c.deps||[]).filter(d=>cards[d]).map(d=>"#"+d).join(", ")}</b></span>`:""}`;
+  d.innerHTML=`${c.parent?`<span class="etag" style="background:${epicColor(c.parent)}" title="${esc(cards[c.parent]?cards[c.parent].title:"")}">${esc(epicLabel(c.parent))}</span>`:""}<span class="pill">${PRIO[c.prio]||c.prio}</span>${epic?`<span class="pill epic" style="background:${epicColor(c.id)};color:#fff">epic ${progress(c)}</span>`:""}<span class="id">#${c.id}</span>${c.due?` <span class="id">· ${c.due}</span>`:""}${st&&st!=="open"&&view!=="kanban"?`<span class="st ${st==="done"?"done":st==="blocked"?"blocked":st==="dropped"?"dropped":""}">${st}</span>`:""}<span class="t"></span><span class="m"></span>${view!=="kanban"&&(c.deps||[]).filter(d=>cards[d]).length?`<span class="after">after <b>${(c.deps||[]).filter(d=>cards[d]).map(d=>"#"+d).join(", ")}</b></span>`:""}`;
   d.querySelector(".t").textContent=c.title;
-  d.querySelector(".m").textContent=[c.owner?"Owner: "+c.owner:"",c.follower&&c.follower!=="-"?"PQE: "+c.follower:"",c.parent?"part of #"+c.parent:"",extra||""].filter(Boolean).join(" · ");
+  d.querySelector(".m").textContent=[c.owner?"Owner: "+c.owner:"",c.follower&&c.follower!=="-"?"PQE: "+c.follower:"",extra||""].filter(Boolean).join(" · ");
   d.addEventListener("click",()=>{sel=c.id;openPanel(c.id);render();});
   d.addEventListener("keydown",e=>{if(e.key==="Enter"){sel=c.id;openPanel(c.id);render();}});
   d.addEventListener("dragstart",e=>{e.dataTransfer.setData("text/plain",c.id);});
@@ -281,6 +287,14 @@ function renderPeople(list){
 }
 function drawLinks(focus){
   const svg=$("#links"), wrap=$("#boardwrap"); if(view==="people"){svg.innerHTML="";return;}
+  if(view==="kanban"){ // no arrows on the kanban: outline what the hovered/selected card waits for (orange) and what it unlocks (blue)
+    svg.innerHTML="";wrap.querySelectorAll(".card.dep-hi,.card.unlock-hi").forEach(e=>e.classList.remove("dep-hi","unlock-hi"));
+    $("#lgFocus").hidden=!focus;$("#lgArrows").hidden=!!focus;
+    if(!focus||!cards[focus])return;
+    effDeps(cards[focus]).forEach(d=>{const e=wrap.querySelector(`.card[data-id="${CSS.escape(d)}"]`);if(e)e.classList.add("dep-hi");});
+    Object.values(cards).filter(c=>effDeps(c).includes(focus)).forEach(c=>{const e=wrap.querySelector(`.card[data-id="${CSS.escape(c.id)}"]`);if(e)e.classList.add("unlock-hi");});
+    return;
+  }
   const on=$("#arrows").checked;
   $("#lgFocus").hidden=!focus; $("#lgArrows").hidden=!!focus;
   svg.setAttribute("width",wrap.scrollWidth);svg.setAttribute("height",wrap.scrollHeight);
@@ -489,12 +503,14 @@ function renderKanban(list){
   LAYERS.forEach(r=>{
     b.append(el("div",{class:"hr",style:`background:${LCOL[r]}`},r));
     const eps=list.filter(c=>visible(c)&&c.layer===r&&isEpic(c)&&c.status!=="dropped");
-    if(eps.length){b.lastChild.style.gridRow="span 2";const strip=el("div",{class:"epics"},el("span",{},"Epics:"));eps.forEach(e=>{const ch=children(e.id),dn=ch.filter(x=>x.status==="done").length;strip.append(el("span",{class:"ep",title:e.title+" — click to open",onclick:()=>{sel=e.id;openPanel(e.id);}},el("b",{},"#"+e.id),e.title.length>42?e.title.slice(0,40)+"…":e.title,el("span",{class:"bar"},el("i",{style:`width:${ch.length?Math.round(100*dn/ch.length):0}%`})),`${dn}/${ch.length}`));});b.append(strip);}
+    if(eps.length){b.lastChild.style.gridRow="span 2";const strip=el("div",{class:"epics"},el("span",{},"Epics (children carry the same colour):"));eps.forEach(e=>{const ch=children(e.id),dn=ch.filter(x=>x.status==="done").length;strip.append(el("span",{class:"ep",style:`background:${epicColor(e.id)};border-color:${epicColor(e.id)};color:#fff`,title:e.title+" — click to open",onclick:()=>{sel=e.id;openPanel(e.id);}},el("b",{style:"color:#fff"},"#"+e.id),e.title.length>42?e.title.slice(0,40)+"…":e.title,el("span",{class:"bar",style:"background:rgba(255,255,255,.35)"},el("i",{style:`width:${ch.length?Math.round(100*dn/ch.length):0}%;background:#fff`})),`${dn}/${ch.length}`));});b.append(strip);}
     KCOLS.forEach(k=>{
       const cell=el("div",{class:"cell"});
       const items=list.filter(c=>visible(c)&&c.layer===r&&!isEpic(c)&&c.status!=="dropped"&&kcol(c)===k);
       items.sort((a,b)=>a.prio.localeCompare(b.prio)||(W[a.id]||0)-(W[b.id]||0));
-      items.forEach(c=>{const extra=k==="Waiting"?"after "+effDeps(c).filter(d=>!isDone(cards[d])).map(d=>"#"+d).join(", "):(k==="Done"&&c.prio==="D"?"taken":c.company);cell.append(cardEl(c,extra));});
+      items.forEach(c=>{const ce=cardEl(c,k==="Done"&&c.prio==="D"?"taken":c.company);
+        if(k==="Waiting"){const w=el("span",{class:"waits"});w.append("waits for ");effDeps(c).filter(d=>!isDone(cards[d])).forEach((d,i)=>{const pc=cards[d];w.append(i?", ":"",el("b",{title:pc.title},"#"+d),` (${kcol(pc).toLowerCase()})`);});ce.append(w);}
+        cell.append(ce);});
       dropCell(cell,async c=>{
         const st=k==="In progress"?"in progress":k==="Blocked"?"blocked":k==="Done"?"done":"open";
         if(c.status===st)return;
@@ -519,7 +535,7 @@ function renderBacklog(list){
     who.length?`Votes counted for this layer: ${who.join(", ")}${who.includes(me)?" (yours counts)":" — you can vote, it is shown but not counted"}`:"No voter list for this layer yet: every vote counts (set it under Voters).",
     " · Score = (Value + Urgency + Risk) ÷ Size, medians of the counted votes · ranked once 3 votes are in · XL must be split first."));
   const eps=list.filter(c=>c.layer===blLayer&&isEpic(c)&&!isDone(c));
-  if(eps.length)ex.append(el("div",{class:"epics",style:"padding:0"},el("span",{},"Epics in this layer (ranked through their children):"),...eps.map(e=>{const ch=children(e.id),dn=ch.filter(x=>x.status==="done").length;return el("span",{class:"ep",onclick:()=>{sel=e.id;openPanel(e.id);}},el("b",{},"#"+e.id),e.title.length>42?e.title.slice(0,40)+"…":e.title,`${dn}/${ch.length}`);})));
+  if(eps.length)ex.append(el("div",{class:"epics",style:"padding:0"},el("span",{},"Epics in this layer (ranked through their children):"),...eps.map(e=>{const ch=children(e.id),dn=ch.filter(x=>x.status==="done").length;return el("span",{class:"ep",style:`background:${epicColor(e.id)};border-color:${epicColor(e.id)};color:#fff`,onclick:()=>{sel=e.id;openPanel(e.id);}},el("b",{style:"color:#fff"},"#"+e.id),e.title.length>42?e.title.slice(0,40)+"…":e.title,`${dn}/${ch.length}`);})));
   const rows=list.filter(c=>visible(c)&&c.layer===blLayer&&!isDone(c)&&c.prio!=="D"&&!isEpic(c)).map(c=>({c,s:score(c)}));
   rows.sort((a,b)=>(b.s.wsjf-a.s.wsjf)||(a.s.reason?1:0)-(b.s.reason?1:0)||a.c.prio.localeCompare(b.c.prio));
   const t=el("table",{class:"bl"});
@@ -535,7 +551,7 @@ function renderBacklog(list){
     const badges=el("span",{});
     if(state==="Ready")badges.append(el("span",{class:"badge ready"},"ready"));else if(state==="Waiting")badges.append(el("span",{class:"badge wait",title:"waits for "+effDeps(c).filter(d=>!isDone(cards[d])).map(d=>"#"+d).join(", ")},"waiting"));else if(state==="In progress")badges.append(el("span",{class:"badge wip"},"in progress"));else if(state==="Blocked")badges.append(el("span",{class:"badge blocked"},"blocked"));
     if(c.size==="XL")badges.append(el("span",{class:"badge split"},"split"));
-    if(c.parent)badges.append(el("span",{class:"badge wip",style:"background:var(--cell);color:var(--muted)",title:cards[c.parent]?cards[c.parent].title:""},"↳ #"+c.parent));
+    if(c.parent)badges.append(el("span",{class:"badge",style:`background:${epicColor(c.parent)};color:#fff`,title:cards[c.parent]?cards[c.parent].title:""},epicLabel(c.parent)));
     if(s.spread>=4)badges.append(el("span",{class:"badge spread",title:"the counted votes disagree by "+s.spread+" on one component — discuss"},"disagree"));
     tr.append(el("td",{class:"rank"},ranked?String(rank):""),
       el("td",{},el("span",{class:"pill",style:`background:var(--p-${c.prio==="D"?"d":c.prio.slice(1)}-bg);color:var(--p-${c.prio==="D"?"d":c.prio.slice(1)})`},c.prio)),
