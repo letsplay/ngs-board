@@ -2,6 +2,6 @@
 // access is enforced by the database rules (RLS) in supabase/schema.sql, not by hiding this key.
 window.BOARD_CONFIG = {
   SUPABASE_URL: "https://kjkfcopygndilwyhzhbw.supabase.co",
-  SUPABASE_ANON_KEY: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imtqa2Zjb3B5Z25kaWx3eWh6aGJ3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTE3ODQ5ODQsImV4cCI6MjEwNzM2MDk4NH0.tvI1PJHmAeswJR2ZqRjzYee1k8Z8WX986dONmMbV-FE"
+  SUPABASE_ANON_KEY: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imtqa2Zjb3B5Z25kaWx3eWh6aGJ3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTE3ODQ5ODQsImV4cCI6MjEwNzM2MDk4NH0.tvI1PJHmAeswJR2ZqRjzYee1k8Z8WX986dONmMbV-FE",
   TRACKER_URL: "https://charlesriverlabs.sharepoint.com/:x:/r/sites/BioinformaticsBFX/Shared%20Documents/BFX%20Project%20Management/03_PQE%20Scope/10_Meeting%20Recordings_Notes/2026%2010%2005_BFX%20PQE%20Paris%20Workshop%20Action%20Tracker_DIST.xlsx?d=w4d2f18d9386d4ad8a3267c05d146b7ec&csf=1&web=1&e=UDiT78"
 };
